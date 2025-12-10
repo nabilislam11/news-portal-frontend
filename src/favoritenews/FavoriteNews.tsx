@@ -1,7 +1,5 @@
-import React from "react";
 import Container from "../components/container/Container";
 import FavoriteNewsCard from "./FavoriteNewsCard";
-import fvt from "../assets/fvt2.jpeg";
 import fvt2 from "../assets/fvt3.jpg";
 import trending from "../assets/trending.jpeg";
 import cricket from "../assets/cricket.jpg";
