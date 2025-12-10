@@ -8,7 +8,7 @@ import Container from "../container/Container";
 const Trending: React.FC = () => {
   const cardData = [
     {
-      image: cricket, // আপনার ছবি পাথ দিন
+      image: cricket,
       tag: "আন্তর্জাতিক",
       title: "সংসদে আজ গুরুত্বপূর্ণ বিল পাশ, দেশের উন্নয়নে নতুন মাইলফলক",
 
@@ -29,7 +29,7 @@ const Trending: React.FC = () => {
   ];
   return (
     <Container>
-      <div className="px-4  py-5">
+      <div className=" py-5">
         <div className="flex flex-col md:flex-row  justify-between items-center  gap-5">
           {/* Main trending card */}
           <div className="relative md:w-[70%] overflow-hidden rounded-lg">

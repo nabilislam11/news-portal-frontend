@@ -1,4 +1,5 @@
 import React from "react";
+import Container from "../container/Container";
 
 export default function Topheader() {
   // Get current date
@@ -13,7 +14,7 @@ export default function Topheader() {
 
   return (
     <header className="w-full bg-gray-200 border-b border-gray-300">
-      <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center text-sm font-medium">
+      <Container className="mx-auto py-2 flex justify-between items-center text-sm font-medium">
         {/* Left */}
         <div className="text-red-600 font-semibold cursor-pointer">
           Breaking News
@@ -31,7 +32,7 @@ export default function Topheader() {
             E-Paper
           </span>
         </div>
-      </div>
+      </Container>
     </header>
   );
 }

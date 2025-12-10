@@ -1,35 +1,35 @@
-import React, { useState } from "react";
-import Container from "../components/container/Container";
+import  { useState } from "react";import Container from "../components/container/Container";
+import Logo from "../components/logo/Logo";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   // Date
-  const today = new Date();
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  };
-  const dateString = today.toLocaleDateString("en-US", options);
+  // const today = new Date();
+  // const options: Intl.DateTimeFormatOptions = {
+  //   weekday: "long",
+  //   day: "numeric",
+  //   month: "long",
+  //   year: "numeric",
+  // };
+  // const dateString = today.toLocaleDateString("en-US", options);
 
   return (
     <header className="w-full shadow-md">
+      <Container>
       {/* Main Header */}
+
       <div className="w-full bg-white">
-        <div className="max-w-7xl mx-auto px-4 py-5 flex justify-between items-center">
+        <div className=" mx-auto  py-5 flex justify-between items-center">
           {/* Logo */}
-          <div className="text-2xl font-bold text-red-600 cursor-pointer">
-            MyLogo
-          </div>
+          <Logo />
 
           {/* Search - hidden on mobile */}
           <div className="flex-1 mx-4 hidden md:flex">
             <input
               type="text"
               placeholder="Search..."
-              className="w-full border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
 
@@ -81,7 +81,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200 px-4 py-2 flex flex-col gap-2">
+          <div className="md:hidden bg-white border-t border-gray-200  py-2 flex flex-col gap-2">
             <span className="cursor-pointer hover:text-red-600 transition">
               জাতীয়
             </span>
@@ -101,11 +101,12 @@ export default function Header() {
             <input
               type="text"
               placeholder="Search..."
-              className="mt-2 border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="mt-2 border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
         )}
       </div>
+      </Container>
     </header>
   );
 }
