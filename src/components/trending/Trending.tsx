@@ -1,27 +1,29 @@
 import React from "react";
-import trending from "../../assets/trending.jpeg";
+
 import { MdWatchLater } from "react-icons/md";
-import cricket from "../../assets/cricket.jpg";
 import MiniCard from "./MiniCart";
 import Container from "../container/Container";
+import type { CardProps } from "../../types/CardProps";
 
 const Trending: React.FC = () => {
-  const cardData = [
+  const cardData: CardProps[] = [
     {
-      image: cricket,
-      tag: "আন্তর্জাতিক",
+      image: "https://theunitedindian.com/images/crime-13-04-24-M-hero.webp",
+      tag: "অর্থনীতি",
       title: "সংসদে আজ গুরুত্বপূর্ণ বিল পাশ, দেশের উন্নয়নে নতুন মাইলফলক",
 
       time: "1 Hour ago",
     },
     {
-      image: trending,
-      tag: "খেলাধুলা",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPuH1kQAHVumAHPRWTTiKwatTPA81-bT_M_Q&s",
+      tag: "অর্থনীতি",
       title: "জাতীয় ক্রিকেট দলের ঐতিহাসিক জয়",
       time: "৩ ঘণ্টা আগে",
     },
     {
-      image: cricket,
+      image:
+        "https://static.cricbuzz.com/a/img/v1/i1/c796689/pat-cummins-included-in-squad-for-adelaide-test.jpg?d=high&p=det",
       tag: "অর্থনীতি",
       title: "বাজারে আসছে নতুন রেকর্ড",
       time: "৪ ঘণ্টা আগে",
@@ -36,7 +38,9 @@ const Trending: React.FC = () => {
             <div className="relative group  ">
               <img
                 className="object-cover w-full  group-hover:scale-105  transition-all duration-250 "
-                src={trending}
+                src={
+                  "https://upload.wikimedia.org/wikipedia/commons/b/bd/Taj_Mahal%2C_Agra%2C_India_edit3.jpg"
+                }
                 alt="Trending"
               />
               <div className="group-hover:scale-105 transition-all duration-250   absolute inset-0 bg-black/50 "></div>

@@ -1,3 +1,4 @@
+import EveryDay from "../components/everyday/EveryDay";
 
 import Trending from "../components/trending/Trending";
 import FavoriteNews from "../favoritenews/FavoriteNews";
@@ -8,6 +9,7 @@ const Home = () => {
       <div className="bg-white">
         <Trending></Trending>
         <FavoriteNews></FavoriteNews>
+        <EveryDay></EveryDay>
       </div>
     </>
   );

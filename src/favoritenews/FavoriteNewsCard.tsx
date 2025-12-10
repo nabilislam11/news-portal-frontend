@@ -1,8 +1,5 @@
-interface CardProps {
-  image: string;
-  tag: string;
-  title: string;
-}
+import type { CardProps } from "../types/CardProps";
+
 function FavoriteNewsCard({ image, tag, title }: CardProps) {
   return (
     <div className=" group group-hover:border hover:border-rose-500 bg-white rounded-lg border overflow-hidden shadow-sm hover:shadow-md transition hover:-translate-y-[2px] cursor-pointer">

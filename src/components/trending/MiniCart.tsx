@@ -1,9 +1,4 @@
-interface CardProps {
-  image: string;
-  tag: string;
-  title: string;
-  time: string;
-}
+import type { CardProps } from "../../types/CardProps";
 
 function MiniCard({ image, tag, title, time }: CardProps) {
   return (
