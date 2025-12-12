@@ -16,7 +16,8 @@ type NavItems = {
   path?: string;
 };
 type Contract = {
-  name: React.ReactNode;
+  name: string;
+  icon: React.ReactNode;
   path?: string;
 };
 
@@ -43,24 +44,21 @@ const navItems: NavItems[] = [
   },
 ];
 const contract: Contract[] = [
+  { name: "Facebook", icon: <FaFacebookF />, path: "" },
   {
-    name: <FaFacebookF />,
+    name: "Linkdin",
+    icon: <FaLinkedinIn />,
+    path: "",
+  },
+  { name: "YouTube", icon: <FaYoutube />, path: "" },
+  {
+    name: "Twitter",
+    icon: <IoLogoTwitter />,
     path: "",
   },
   {
-    name: <FaLinkedinIn />,
-    path: "",
-  },
-  {
-    name: <FaYoutube />,
-    path: "",
-  },
-  {
-    name: <IoLogoTwitter />,
-    path: "",
-  },
-  {
-    name: <FaInstagram />,
+    name: "Instragram",
+    icon: <FaInstagram />,
     path: "",
   },
 ];
@@ -91,9 +89,9 @@ const Footer = () => {
   return (
     <div>
       <div className="grid  grid-cols-1  sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 bg-gray-200  justify-items-center    ">
-        <div className="">
+        <div className="text-center ">
           <Logo></Logo>
-          <h2 className="font-semibold  font-secondary text-[14px] pt-3  ">
+          <h2 className="font-semibold  font-secondary text-[14px] pt-3 leading-7  ">
             বাংলাদেশের সর্বাধিক জনপ্রিয় এবং বিশ্বাসযোগ্য সংবাদপত্র। সত্য,
             নিরপেক্ষ এবং দায়বদ্ধ সাংবাদিকতার প্রতি আমাদের অঙ্গীকার।
           </h2>
@@ -127,23 +125,31 @@ const Footer = () => {
           <h2 className="font-bold font-secondary text-[17px] pb-2.5   ">
             আমাদের সম্পর্কে
           </h2>
-          <div className="group  flex flex-col items-center  gap-5 text-gray-700 font-medium transition duration-200 ">
+          <div className="  flex flex-col items-center  gap-5 text-gray-700 font-medium transition duration-200 ">
             {contract.map((info, i) =>
               info.path ? (
-                <Link
-                  to={info.path}
-                  key={i}
-                  className="cursor-pointer hover:text-red-600 border border-gray-300 hover:border-red-500 transition duration-200 text-[18px] items-center  rounded py-1.5 px-2"
-                >
-                  {info.name}
-                </Link>
+                <div className="hover:text-red-600 hover:border-red-500  flex gap-x-2.5 items-center transition duration-200 cursor-pointer ">
+                  <Link
+                    to={info.path}
+                    key={i}
+                    className="cursor-pointer hover:text-red-600 border border-gray-300 hover:border-red-500 transition duration-200 text-[18px] items-center  rounded py-1.5 px-2"
+                  >
+                    {info.icon} {info.name}
+                  </Link>
+                </div>
               ) : (
-                <span
+                <div
                   key={i}
-                  className="cursor-pointer hover:text-red-600 border  border-gray-300 hover:border-red-500 transition duration-200 text-[18px]  rounded py-1.5 px-2"
+                  className="flex items-center gap-x-2.5 cursor-pointer transition duration-200 hover:text-red-600  group "
                 >
-                  {info.name}
-                </span>
+                  <span className="border border-gray-300 rounded py-1.5 px-2 text-[18px] transition duration-200 group-hover:border-red-500">
+                    {info.icon}
+                  </span>
+
+                  <span className="transition duration-200 hover:text-red-500">
+                    {info.name}
+                  </span>
+                </div>
               )
             )}
           </div>
