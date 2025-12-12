@@ -1,6 +1,7 @@
 import Header from "../header/Header";
 import { Outlet } from "react-router";
 import Topheader from "../components/topheader/Topheader";
+import Footer from "../components/footer/Footer";
 
 const RootLayout = () => {
   return (
@@ -9,6 +10,7 @@ const RootLayout = () => {
       <Header></Header>
       {/* <MarqueeTag></MarqueeTag> */}
       <Outlet></Outlet>
+              <Footer></Footer>
     </div>
   );
 };

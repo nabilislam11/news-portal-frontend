@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import RootLayout from "./pages/RootLayout";
 import Home from "./pages/Home";
+import CategoryPage from "./pages/CategoryPage";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "home",
         element: <Home />,
+      },
+      {
+        path: "category",
+        element: <CategoryPage />,
       },
       // {
       //   path: "/post",
