@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import logo from "../../assets/logo.png";
 const Logo = () => {
   const [isHovered, setIsHovered] = useState(false);
   return (
