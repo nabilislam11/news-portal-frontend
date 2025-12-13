@@ -16,6 +16,13 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Import Alias */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"]
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -23,10 +30,6 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
-  },
-  "baseUrl": ".",
-  "paths": {
-    "@/*": ["./src/*"]
   },
   "include": ["src"]
 }
