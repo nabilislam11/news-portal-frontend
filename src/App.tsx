@@ -1,9 +1,11 @@
 import "./App.css";
-import Login from "./pages/Login";
+import Login from "./dashboard/pages/Login";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import RootLayout from "./pages/RootLayout";
 import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
+import DashRootLayout from "./dashboard/layout/DashRootLayout";
+import DashHome from "./dashboard/pages/DashHome";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -31,6 +33,11 @@ const router = createBrowserRouter([
       //   element: <Post />,
       // },
     ],
+  },
+  {
+    path: "/dashboard",
+    element: <DashRootLayout />,
+    children: [{ index: true, element: <DashHome /> }],
   },
 ]);
 
