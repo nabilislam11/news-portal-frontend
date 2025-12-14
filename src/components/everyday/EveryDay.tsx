@@ -45,9 +45,17 @@ const EveryDay = () => {
     },
   ];
   return (
-    <Container>
-      <div className="py-8 ">
-        <div className=" flex flex-col lg:flex-row  justify-between  ">
+    <div className="py-8 ">
+      <Container>
+        <div className="flex flex-col gap-x-2">
+          <div className="flex items-center gap-x-2">
+            <div className="w-[5px]  bg-red-500 h-7 "></div>
+            <h2 className=" font-extrabold text-[27px] font-primary text-black  ">
+              বিশেষ প্রতিবেদন
+            </h2>
+          </div>
+        </div>
+        <div className=" flex flex-col lg:flex-row  justify-between py-8  ">
           <div className=" md:w-[70%] ">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 ">
               {everyday.map((card, i) => (
@@ -55,10 +63,24 @@ const EveryDay = () => {
               ))}
             </div>
           </div>
-          <div className="w-[35%] "></div>
+          <div className="w-[35%] ">
+            {/* <div className="bg-red border ">
+              <h2 className="font-bold font-secondary text-[17px] text-white ">
+                নিউজলেটার সাবস্ক্রাইব করুন
+              </h2>
+              <p className="font-semibold  font-secondary text-[14px] text-white ">
+                সর্বশেষ খবর সরাসরি আপনার ইমেইলে পান
+              </p>
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
+              />
+            </div> */}
+          </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 };
 
