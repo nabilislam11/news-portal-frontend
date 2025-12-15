@@ -64,7 +64,7 @@ const EveryDay = () => {
             </div>
           </div>
           <div className=" md:w-[32%] ">
-            <div className="flex-col gap-y-5 ">
+            <div className="flex flex-col gap-y-5">
               <div className="bg-linear-to-r  from-red-600 via-red-500 to-green-700 p-6 flex flex-col gap-y-2  rounded-lg">
                 <h2 className="font-bold font-secondary text-[17px] text-white ">
                   নিউজলেটার সাবস্ক্রাইব করুন
@@ -83,7 +83,7 @@ const EveryDay = () => {
               </div>
               <div className="bg-muted rounded-lg p-8 text-center border border-border">
                 <p>Adds</p>
-                <div className="bg-background/50 w-[300px] h-[250px] flex items-center justify-center rounded ">
+                <div className="bg-background/50 w-[300px] mx-auto h-[250px] flex items-center justify-center rounded ">
                   <p> w-300px h-250px </p>
                 </div>
               </div>
