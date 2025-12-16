@@ -83,7 +83,7 @@ const EveryDay = () => {
               </div>
               <div className="bg-muted rounded-lg p-8 text-center border border-border">
                 <p>Adds</p>
-                <div className="bg-white mx-auto w-[300px] h-[250px] flex flex-col items-center justify-center rounded ">
+                <div className="bg-background/50 w-[300px] h-[250px] flex items-center justify-center rounded ">
                   <p> w-300px h-250px </p>
                 </div>
               </div>
