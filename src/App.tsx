@@ -9,8 +9,6 @@ import DashHome from "./dashboard/pages/DashHome";
 import BlogSinglePost from "./pages/BlogSinglePost";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import National from "./components/national/National";
-import Politics from "./components/politics/Politics";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -30,12 +28,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "category",
+        path: "category/:id",
         Component: CategoryPage,
-        children: [
-          { path: "national", element: <National /> },
-          { path: "politics", element: <Politics /> },
-        ],
       },
       {
         path: "/single-post",

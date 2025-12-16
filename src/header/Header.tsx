@@ -22,12 +22,12 @@ export default function Header() {
 
   const navItems: NavItems[] = [
     {
-      name: " জাতীয়",
-      path: "national",
+      name: "জাতীয়",
+      path: "/",
     },
     {
-      name: " রাজনীতি",
-      path: "politics",
+      name: "রাজনীতি",
+      path: "/",
     },
     {
       name: "রাজনীতি",
