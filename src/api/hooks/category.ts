@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../axios";
 
-
 export type Category = {
   _id: string;
   name: string;
@@ -10,7 +9,6 @@ export type Category = {
   isActive: boolean;
   createdAt: string;
 };
-
 
 export const useFetchAllCategories = () => {
   return useQuery({
@@ -22,8 +20,6 @@ export const useFetchAllCategories = () => {
   });
 };
 
-
-
 export const useFetchCategoryById = (id: string) => {
   return useQuery({
     queryKey: ["categories", id],
@@ -31,11 +27,9 @@ export const useFetchCategoryById = (id: string) => {
       const res = await api.get(`category/${id}`);
       return res.data.data;
     },
-    enabled: !!id, 
+    enabled: !!id,
   });
 };
-
-
 
 type CreateCategoryInput = {
   name: string;
@@ -59,13 +53,10 @@ export const useCreateCategory = () => {
   });
 };
 
-
-
 type UpdateCategoryInput = {
   id: string;
-  name?: string;
+  name: string;
   description?: string;
-  isActive?: boolean;
 };
 
 export const useUpdateCategory = () => {
@@ -73,7 +64,7 @@ export const useUpdateCategory = () => {
 
   return useMutation({
     mutationFn: async ({ id, ...data }: UpdateCategoryInput) => {
-      const res = await api.patch(`category/${id}`, data);
+      const res = await api.put(`category/${id}`, data);
       return res.data.data;
     },
 
@@ -87,13 +78,15 @@ export const useUpdateCategory = () => {
   });
 };
 
-
 export const useDeleteCategory = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await api.delete(`category/${id}`);
+      queryClient.invalidateQueries({
+        queryKey: ["categories", id],
+      });
       return res.data;
     },
 

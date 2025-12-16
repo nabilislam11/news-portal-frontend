@@ -11,6 +11,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Categories from "./dashboard/pages/Categories";
+import Posts from "./dashboard/pages/Posts";
+import NavMenu from "./dashboard/pages/NavMenu";
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -43,7 +46,7 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <DashRootLayout />,
-    children: [{ index: true, element: <DashHome /> }],
+    children: [{ index: true, element: <DashHome /> }, {path: "/dashboard/categories", element: <Categories /> }, {path: "/dashboard/posts", element: <Posts /> }, {path: "/dashboard/nav", element: <NavMenu /> },],
   },
 ]);
 
