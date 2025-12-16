@@ -137,3 +137,9 @@
 .slick-list {
   margin: 0;
 }
+
+@theme{
+  --color-primary: #FF0505;
+  --color-secondary: #0F6D28;
+  
+}

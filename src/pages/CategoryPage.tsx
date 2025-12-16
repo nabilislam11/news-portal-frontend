@@ -1,7 +1,9 @@
 import {  Facebook, Twitter, Instagram, Youtube, Linkedin } from 'lucide-react';
 import Container from '../components/container/Container';
+import { useParams } from 'react-router';
 
 const CategoryPage = () => {
+  const {id} = useParams();
   const articles = [
     {
       id: 1,
@@ -79,7 +81,7 @@ const CategoryPage = () => {
         {/* Category Header */}
         <div className="text-center mb-8 bg-white py-6">
           <h1 className="text-2xl font-bold text-gray-800">
-            Category : <span className="text-pink-600">ভ্রমণ</span>
+            Category : <span className="text-pink-600">{id}</span>
           </h1>
         </div>
 

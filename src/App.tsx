@@ -9,6 +9,9 @@ import DashHome from "./dashboard/pages/DashHome";
 import BlogSinglePost from "./pages/BlogSinglePost";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -28,7 +31,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "category",
+        path: "category/:id",
         element: <CategoryPage />,
       },
       {
@@ -47,7 +50,10 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <RouterProvider router={router} />
+      </QueryClientProvider>
     </>
   );
 }
