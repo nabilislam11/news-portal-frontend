@@ -57,7 +57,7 @@ export function AddCategory() {
   return (
     <Dialog open={open} onOpenChange={isOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Category</Button>
+        <Button >Add Category</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={form.handleSubmit(handleSubmit)}>
