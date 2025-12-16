@@ -22,21 +22,16 @@ export default function Header() {
 
   const navItems: NavItems[] = [
     {
-<<<<<<< HEAD
       name: " জাতীয়",
       path: "national",
     },
     {
       name: " রাজনীতি",
       path: "politics",
-=======
-      name: "জাতীয়",
-      path: "/",
     },
     {
       name: "রাজনীতি",
       path: "/",
->>>>>>> bde5d739e271f9e0a351a519de707965ccdd6681
     },
     {
       name: "বিনোদন",
@@ -74,11 +69,7 @@ export default function Header() {
               {navItems.map((nav, i) =>
                 nav.path ? (
                   <Link
-<<<<<<< HEAD
-                    to={`/category/${nav.path}`}
-=======
                     to={`category/${nav.name}`}
->>>>>>> bde5d739e271f9e0a351a519de707965ccdd6681
                     key={i}
                     className="cursor-pointer hover:text-red-600 transition"
                   >
