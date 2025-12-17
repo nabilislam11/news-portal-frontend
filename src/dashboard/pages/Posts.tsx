@@ -62,7 +62,7 @@ const Posts = () => {
       accessorKey: "image",
       header: "Image",
       cell: ({ row }: { row: { original: Post } }) => {
-        return <img src={row.original.image} className="w-10" alt="" />;
+        return <img src={row.original.image?.url} className="w-10" alt="" />;
       },
     },
     {
@@ -77,7 +77,7 @@ const Posts = () => {
               </Button>
             </DialogTrigger>
             <DialogContent className="max-h-screen overflow-y-scroll">
-              <img src={row.original.image} alt="" />
+              <img src={row.original.image?.url} alt="" />
               <h3 className="text-sm sm:text-base font-semibold leading-snug text-gray-900 line-clamp-2 mb-2 group-hover:text-red-500 transition-colors">
                 {row.original.title}
               </h3>
