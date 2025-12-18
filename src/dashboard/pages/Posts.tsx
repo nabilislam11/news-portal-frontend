@@ -1,46 +1,31 @@
+import { useDeletePost, useFetchAllPosts } from "@/api/hooks/post";
+import { EditPost } from "@/components/dashboard/post/EditPost";
 import DataTable from "@/components/dataTable/DataTable";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import type { Post } from "@/validators/post";
-import { Pencil, Trash } from "lucide-react";
-
-const mockPosts = [
-  {
-    id: "1",
-    title: "category 1",
-    category: "category 1",
-    subCategory: "sub category 1",
-    slug: "category-1",
-    tags: ["tag 1", "tag 2", "tag 3"],
-    content: "description 1",
-    image: "https://picsum.photos/200/300",
-    isDraft: false,
-  },
-  {
-    id: "2",
-    title: "category 2",
-    category: "category 2",
-    subCategory: "sub category 2",
-    slug: "category-2",
-    tags: ["tag 1", "tag 2", "tag 3"],
-    content: "description 2",
-    image: "https://picsum.photos/200/300",
-    isDraft: false,
-  },
-  {
-    id: "3",
-    title: "category 3",
-    category: "category 3",
-    subCategory: "sub category 3",
-    slug: "category-3",
-    tags: ["tag 1", "tag 2", "tag 3"],
-    content: "description 3",
-    image: "https://picsum.photos/200/300",
-    isDraft: false,
-  },
-];
+import { Eye, Trash } from "lucide-react";
+import { toast } from "sonner";
+import { Link } from "react-router";
+import { PostContent } from "@/components/post/PostContent";
 
 const Posts = () => {
+  const { data: post, isLoading } = useFetchAllPosts();
+  const deletePost = useDeletePost();
+  console.log(post);
+
   const column = [
     {
       accessorKey: "title",
@@ -49,40 +34,60 @@ const Posts = () => {
     {
       accessorKey: "category",
       header: "Category",
-    },
-    {
-      accessorKey: "subCategory",
-      header: "Sub Category",
+      cell: ({ row }: { row: { original: Post } }) => {
+        return <p>{row.original.category.name}</p>;
+      },
     },
     {
       accessorKey: "tags",
       header: "Tags",
+      cell: ({ row }: { row: { original: Post } }) => {
+        return (
+          <p className="truncate w-40">
+            {row.original.tags?.map((tag: string) => (
+              <Badge key={tag}>{tag}</Badge>
+            ))}
+          </p>
+        );
+      },
     },
     {
       accessorKey: "content",
       header: "Content",
+      cell: ({ row }: { row: { original: Post } }) => {
+        return <p className="truncate w-40">{row.original.content}</p>;
+      },
     },
     {
       accessorKey: "image",
       header: "Image",
-      cell:({row}: {row: {original: Post}})=>{
-
-        return <img src={row.original.image} className="w-10" alt="" />
-
-      }
+      cell: ({ row }: { row: { original: Post } }) => {
+        return <img src={row.original.image?.url} className="w-10" alt="" />;
+      },
     },
     {
       header: "Actions",
-      cell: () => (
+      cell: ({ row }: { row: { original: Post } }) => (
         <div className="flex justify-center text-center items-center gap-2">
-          <Button
-            variant={"secondary"}
-            className="bg-blue-500 text-white"
-            size={"sm"}
-          >
-            {" "}
-            <Pencil />{" "}
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="bg-secondary" size={"sm"}>
+                {" "}
+                <Eye />{" "}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-h-screen overflow-y-scroll">
+              <img src={row.original.image?.url} alt="" />
+              <h3 className="text-sm sm:text-base font-semibold leading-snug text-gray-900 line-clamp-2 mb-2 group-hover:text-red-500 transition-colors">
+                {row.original.title}
+              </h3>
+              <PostContent content={row.original.content} />
+              <Badge>{row.original.category.name}</Badge>
+              <p>{row.original?.tags?.join(", ")}</p>
+              <span>Views: {row.original.views}</span>
+            </DialogContent>
+          </Dialog>
+          <EditPost data={row.original} />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -95,12 +100,23 @@ const Posts = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete this Category
+                  This action cannot be undone. This will permanently delete
+                  this Category
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
+                <AlertDialogAction
+                  onClick={() => {
+                    deletePost.mutate(row.original._id as string, {
+                      onSuccess: () => {
+                        toast.success("Post deleted successfully!");
+                      },
+                    });
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -111,7 +127,18 @@ const Posts = () => {
 
   return (
     <div>
-      <DataTable search="title" data={mockPosts} columns={column} />
+      <div className="flex justify-between mb-5 items-center">
+        <h2 className="font-bold text-2xl">Post</h2>
+        <Link to={"/dashboard/add-post"}>
+          <Button> Add Post</Button>
+        </Link>
+      </div>
+      <DataTable
+        loading={isLoading}
+        search="title"
+        data={post || []}
+        columns={column}
+      />
     </div>
   );
 };
