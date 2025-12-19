@@ -203,7 +203,7 @@ export default function Ads() {
   const squareAds = ads.filter((ad) => ad.type === "square");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-rose-100 p-6">
+    <div className="min-h-screen rounded-2xl bg-gradient-to-br from-red-50 to-rose-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
