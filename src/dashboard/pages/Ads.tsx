@@ -38,6 +38,8 @@ export default function Ads() {
   const [showModal, setShowModal] = useState(false);
   const [editingAd, setEditingAd] = useState<Ad | null>(null);
 
+  console.log(ads)
+
 const [form, setForm] = useState<AdForm>({
   title: "",
   type: "horizontal",

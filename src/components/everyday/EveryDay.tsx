@@ -1,11 +1,7 @@
 import type { CardProps } from "../../types/CardProps";
 import Container from "../container/Container";
 import EveryDayCard from "./EveryDayCard";
-import CategoriesCard from "../../components/categoriescard/CategoriesCard";
-import { CategoriesList } from "../../components/categoriescard/CategoriesList";
-import TagCard from "../tag/tagcard/TagCard";
-import { TagList } from "../tag/tagdata/TagList";
-import NewsCard from "../newsitems/NewsCard";
+import SquareAds from "../ads/SquareAds";
 
 const EveryDay = () => {
   const everyday: CardProps[] = [
@@ -88,12 +84,7 @@ const EveryDay = () => {
                   Subscrip
                 </button>
               </div>
-              <div className="bg-muted rounded-lg p-8 text-center border border-border">
-                <p>Adds</p>
-                <div className="bg-background/50 w-[300px] h-[250px] flex items-center justify-center rounded ">
-                  <p> w-300px h-250px </p>
-                </div>
-              </div>
+<SquareAds/>
             </div>
           </div>
         </div>
