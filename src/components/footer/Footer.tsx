@@ -11,6 +11,8 @@ import { IoLogoTwitter } from "react-icons/io5";
 import MiniCard from "../banner/MiniCart";
 import type { CardProps } from "../../types/CardProps";
 import Container from "../container/Container";
+import { useFetchTrendingPosts } from "@/api/hooks/post";
+import { useFetchNavMenu } from "@/api/hooks/navMenu";
 
 type NavItems = {
   name: string;
@@ -86,7 +88,15 @@ const latestNews: CardProps[] = [
     time: "৪ ঘণ্টা আগে",
   },
 ];
+interface NavItem {
+  name: string;
+  path?: string;
+}
 const Footer = () => {
+  const { data: navData } = useFetchNavMenu();
+  const navItems = navData as unknown as NavItem[];
+  const { data: posts, isLoading } = useFetchTrendingPosts();
+
   return (
     <div className=" bg-gray-200 ">
       <Container>
@@ -102,25 +112,17 @@ const Footer = () => {
             <h2 className="font-bold font-secondary text-center  text-[17px] pb-2.5 ">
               বিভাগ
             </h2>
-            <div className="group  flex flex-col  gap-5 text-gray-700 font-medium transition duration-200 ">
-              {navItems.map((nav, i) =>
-                nav.path ? (
+            <div className="group  flex flex-col items-center   gap-5 text-gray-700 font-medium transition duration-200 ">
+              {Array.isArray(navItems) &&
+                navItems.slice(0, 6).map((nav, i) => (
                   <Link
-                    to={nav.path}
                     key={i}
-                    className="cursor-pointer hover:text-red-600 border border-gray-300 hover:border-red-500 transition duration-200  text-center rounded py-1 px-2"
+                    to={`/category/${nav._id}`}
+                    className="cursor-pointer hover:text-red-600 transition"
                   >
                     {nav.name}
                   </Link>
-                ) : (
-                  <span
-                    key={i}
-                    className="cursor-pointer  text-center hover:text-red-600 border  border-gray-300 hover:border-red-500 transition duration-200  rounded py-1 px-2"
-                  >
-                    {nav.name}
-                  </span>
-                )
-              )}
+                ))}
             </div>
           </div>
           <div className="">
@@ -161,8 +163,16 @@ const Footer = () => {
               Latest News
             </h2>
             <div className="  flex flex-col gap-y-2.5  ">
-              {latestNews.map((card, i) => (
-                <MiniCard key={i} {...card} />
+              {posts?.slice(0, 4).map((item, i) => (
+                <MiniCard
+                  key={item._id}
+                  // MiniCard-er props gulo backend onujayi pathate hobe
+                  title={item.postDetails?.title}
+                  tag={item.postDetails?.tag}
+                  image={item.postDetails?.image}
+                  category={item.category}
+                  createdAt={item.postDetails?.createdAt}
+                />
               ))}
             </div>
           </div>

@@ -105,7 +105,7 @@ const Banner: React.FC = () => {
             <div className="w-full bg-red-500 h-0.5"></div>
 
             <div className="flex flex-col gap-y-2.5">
-              {posts?.map((item) => (
+              {posts?.slice(0, 4).map((item) => (
                 <MiniCard
                   key={item._id}
                   // MiniCard-er props gulo backend onujayi pathate hobe

@@ -28,7 +28,7 @@ interface Post {
   _id: string;
   title: string;
   content: string;
-  image?: PostImage; 
+  image?: PostImage;
   createdAt?: string;
 }
 
@@ -57,15 +57,16 @@ export default function Header() {
             <Logo />
 
             <div className="hidden md:flex gap-6 items-center text-gray-700 font-medium">
-              {Array.isArray(navItems) && navItems.map((nav, i) => (
-                <Link
-                  key={i}
-                  to={`/category/${nav._id}`}
-                  className="cursor-pointer hover:text-red-600 transition"
-                >
-                  {nav.name}
-                </Link>
-              ))}
+              {Array.isArray(navItems) &&
+                navItems.map((nav, i) => (
+                  <Link
+                    key={i}
+                    to={`/category/${nav._id}`}
+                    className="cursor-pointer hover:text-red-600 transition"
+                  >
+                    {nav.name}
+                  </Link>
+                ))}
             </div>
 
             <div className="mx-4 hidden lg:flex max-w-[250px]">
@@ -95,23 +96,39 @@ export default function Header() {
                   </div>
 
                   <div className="space-y-4 mt-6">
-                    {!isLoading && searchTerm && searchResults?.data.length === 0 && (
-                      <p className="text-center text-gray-500 py-10">No results found for "{searchTerm}"</p>
-                    )}
+                    {!isLoading &&
+                      searchTerm &&
+                      searchResults?.data.length === 0 && (
+                        <p className="text-center text-gray-500 py-10">
+                          No results found for "{searchTerm}"
+                        </p>
+                      )}
 
                     {(searchResults?.data as Post[])?.map((item) => (
                       <NewsCard
                         key={item._id}
                         comments={0}
-                        date={item.createdAt ? new Date(item.createdAt).toLocaleDateString('bn-BD') : ""}
-                        description={item.content.replace(/<[^>]*>/g, '').substring(0, 150) + "..."}
-                        image={item.image?.url || ""} 
+                        date={
+                          item.createdAt
+                            ? new Date(item.createdAt).toLocaleDateString(
+                                "bn-BD"
+                              )
+                            : ""
+                        }
+                        description={
+                          item.content
+                            .replace(/<[^>]*>/g, "")
+                            .substring(0, 150) + "..."
+                        }
+                        image={item.image?.url || ""}
                         title={item.title}
                       />
                     ))}
-                    
+
                     {!searchTerm && (
-                      <p className="text-center text-gray-400 py-10">Type something to search for news...</p>
+                      <p className="text-center text-gray-400 py-10">
+                        Type something to search for news...
+                      </p>
                     )}
                   </div>
 
@@ -125,11 +142,26 @@ export default function Header() {
             </div>
 
             <div className="md:hidden">
-              <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="focus:outline-none"
+              >
                 <div className="space-y-1">
-                  <span className={`block h-0.5 w-6 bg-gray-700 transition ${isOpen ? "rotate-45 translate-y-1.5" : ""}`} />
-                  <span className={`block h-0.5 w-6 bg-gray-700 transition ${isOpen ? "opacity-0" : ""}`} />
-                  <span className={`block h-0.5 w-6 bg-gray-700 transition ${isOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
+                  <span
+                    className={`block h-0.5 w-6 bg-gray-700 transition ${
+                      isOpen ? "rotate-45 translate-y-1.5" : ""
+                    }`}
+                  />
+                  <span
+                    className={`block h-0.5 w-6 bg-gray-700 transition ${
+                      isOpen ? "opacity-0" : ""
+                    }`}
+                  />
+                  <span
+                    className={`block h-0.5 w-6 bg-gray-700 transition ${
+                      isOpen ? "-rotate-45 -translate-y-1.5" : ""
+                    }`}
+                  />
                 </div>
               </button>
             </div>
@@ -137,16 +169,17 @@ export default function Header() {
 
           {isOpen && (
             <div className="md:hidden bg-white border-t border-gray-200 py-3 grid grid-cols-2 gap-2">
-              {Array.isArray(navItems) && navItems.map((nav, i) => (
-                <Link
-                  key={i}
-                  to={`/category/${nav.name}`}
-                  className="hover:text-red-600 p-2"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {nav.name}
-                </Link>
-              ))}
+              {Array.isArray(navItems) &&
+                navItems.map((nav, i) => (
+                  <Link
+                    key={i}
+                    to={`/category/${nav.name}`}
+                    className="hover:text-red-600 p-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {nav.name}
+                  </Link>
+                ))}
             </div>
           )}
         </div>

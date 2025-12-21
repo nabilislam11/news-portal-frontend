@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import JoditEditor from "jodit-react";
 import { useNavigate } from "react-router";
 
-export function AddPost() {
+export default function AddPost() {
   const navigate = useNavigate(); // ২. নেভিগেট ফাংশন ডিক্লেয়ার
   const { data: category } = useFetchAllCategories();
   const [imageFile, setImageFile] = useState<File | null>(null);

@@ -1,6 +1,10 @@
 import "./App.css";
 import Login from "./dashboard/pages/Login";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import {
+  BrowserRouter,
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router";
 import RootLayout from "./pages/RootLayout";
 import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
@@ -14,9 +18,9 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Categories from "./dashboard/pages/Categories";
 import Posts from "./dashboard/pages/Posts";
 import NavMenu from "./dashboard/pages/NavMenu";
-import { AddPost } from "./dashboard/pages/AddPost";
 import Subscription from "./dashboard/pages/Subscription";
 import Ads from "./dashboard/pages/Ads";
+import AddPost from "./dashboard/pages/AddPost";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
