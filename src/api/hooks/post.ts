@@ -29,17 +29,17 @@ export const useCreatePost = () => {
   return useMutation({
     mutationFn: async (data: FormData) => {
       const res = await api.post("post", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
       return res.data.data;
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts", "all"],
-      });
+      // Post list refresh korbe
+      queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
+
+      // Dashboard stats refresh korbe (Reload chara update hobe)
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 };
@@ -67,22 +67,25 @@ export const useUpdatePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    // 1. Destructure 'formData' explicitly
-    mutationFn: async ({ _id, formData }: { _id: string; formData: FormData }) => {
-      // 2. Send ONLY formData as the body
-      // We also force the header just to be safe, though Axios usually detects it.
+    mutationFn: async ({
+      _id,
+      formData,
+    }: {
+      _id: string;
+      formData: FormData;
+    }) => {
       const res = await api.put(`post/${_id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
       return res.data.data;
     },
 
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["posts", "all"] }); // specific key
-      queryClient.invalidateQueries({
-        queryKey: ["post", variables._id],
-      });
+      queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
+      queryClient.invalidateQueries({ queryKey: ["post", variables._id] });
+
+      // Dashboard refresh korbe
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 };
@@ -93,16 +96,15 @@ export const useDeletePost = () => {
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await api.delete(`post/${id}`);
-      queryClient.invalidateQueries({
-        queryKey: ["posts", id],
-      });
       return res.data;
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts", "all"],
-      });
+      // Post list refresh korbe
+      queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
+
+      // Dashboard refresh korbe
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 };
@@ -149,6 +151,6 @@ export const useSearchPosts = (params: SearchParams) => {
       });
       return res.data;
     },
-    enabled: true, 
+    enabled: true,
   });
 };

@@ -20,8 +20,6 @@ export const useRandomAd = (adType: "BANNER" | "SIDEBAR"): Ad | null => {
     if (filteredAds.length === 0) return null;
 
     const randomIndex = Math.floor(randomSeed * filteredAds.length);
-    console.log(filteredAds[randomIndex].title);
-
     return filteredAds[randomIndex];
   }, [filteredAds, randomSeed]);
 
