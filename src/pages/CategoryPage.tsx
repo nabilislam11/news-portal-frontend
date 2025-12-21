@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router";
 import CategoriesCard from "../components/categoriescard/CategoriesCard";
 import { useFetchAllCategories } from "@/api/hooks/category";
 import { useFetchAllTags } from "@/api/hooks/tag";
-import { useFetchAllPosts } from "@/api/hooks/post";
+import { useFetchAllPosts, useFetchPostsByCategory } from "@/api/hooks/post";
 import TagCard from "@/components/tag/tagcard/TagCard";
 import DateFormatter from "@/components/DateFormatter";
 import { PostContent } from "@/components/post/PostContent";
@@ -13,6 +13,12 @@ const CategoryPage = () => {
   const { data: TagsList } = useFetchAllTags();
   const { data: CategoriesList } = useFetchAllCategories();
   const { data: posts } = useFetchAllPosts();
+  const {data: categoryPosts} = useFetchPostsByCategory(id as string)
+  console.log(id);
+  
+
+  console.log(categoryPosts);
+  
 
   return (
     <div className="bg-gray-50 pt-35 min-h-screen">
@@ -29,7 +35,7 @@ const CategoryPage = () => {
           {/* Main Content Area */}
           <div className="lg:col-span-2">
             {/* Articles */}
-            {posts?.slice(0, 3).map((article) => (
+            {categoryPosts?.map((article) => (
               <div
                 key={article._id}
                 className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"

@@ -186,7 +186,7 @@ export const useFetchPostsByCategory = (
       });
       return res.data;
     },
-    enabled: !!slugOrId, // slugOrId thaklei shudhu fetch hobe
-    staleTime: 1000 * 60 * 5, // 5 minute por por data refresh hobe
+    enabled: !!slugOrId, 
+    staleTime: 1000 * 60 * 5, 
   });
 };

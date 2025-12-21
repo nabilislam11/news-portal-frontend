@@ -60,7 +60,7 @@ export default function Header() {
               {Array.isArray(navItems) && navItems.map((nav, i) => (
                 <Link
                   key={i}
-                  to={`/category/${nav.name}`}
+                  to={`/category/${nav._id}`}
                   className="cursor-pointer hover:text-red-600 transition"
                 >
                   {nav.name}
