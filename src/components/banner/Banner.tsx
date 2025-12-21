@@ -4,9 +4,9 @@ import MiniCard from "./MiniCart";
 import Container from "../container/Container";
 import Slider from "react-slick";
 import { useFetchTrendingPosts } from "@/api/hooks/post";
+import DateFormatter from "../DateFormatter";
 
-// ১. Backend Aggregation onujayi Interface thik kora
-interface TrendingPost {
+interface Post {
   _id: string;
   viewCount: number;
   postDetails: {
@@ -26,10 +26,8 @@ interface TrendingPost {
 }
 
 const Banner: React.FC = () => {
-  // ২. Hook theke data ana (Type casting kora holo)
-  const { data: posts, isLoading } = useFetchTrendingPosts() as {
-    data: TrendingPost[] | undefined;
-    isLoading: boolean;
+  const { data: posts } = useFetchTrendingPosts() as {
+    data: Post[] | undefined;
   };
 
   const settings = {
@@ -79,7 +77,9 @@ const Banner: React.FC = () => {
                     <div className="absolute inset-0 flex flex-col justify-end px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 gap-2 rounded-lg">
                       {/* CATEGORY: Backend theke direct object asche */}
                       <span className="bg-red-500 text-white text-xs sm:text-sm px-3 py-1 rounded-full w-fit">
-                        {item.category?.name || "News"}
+                        {typeof item.category === "object"
+                          ? item.category?.name
+                          : item.category}
                       </span>
 
                       {/* TITLE: postDetails theke */}
@@ -87,20 +87,11 @@ const Banner: React.FC = () => {
                         {item.postDetails?.title}
                       </h2>
 
-                      {/* VIEWS & TIME */}
-                      <div className="flex items-center gap-x-4 text-gray-300 text-xs sm:text-sm">
-                        <div className="flex items-center gap-1">
-                          <MdWatchLater />
-                          <span>
-                            {item.postDetails?.createdAt
-                              ? new Date(
-                                  item.postDetails.createdAt
-                                ).toLocaleDateString()
-                              : ""}
-                          </span>
-                        </div>
-                        <span className="text-orange-400 font-bold flex items-center gap-1">
-                          🔥 {item.viewCount} Views
+                      {/* TIME */}
+                      <div className="flex items-center gap-x-1.5 text-gray-300 text-xs sm:text-sm">
+                        <MdWatchLater />
+                        <span>
+                          <DateFormatter date={item.createdAt} />
                         </span>
                       </div>
                     </div>

@@ -84,7 +84,6 @@ export const useUpdatePost = () => {
       queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
       queryClient.invalidateQueries({ queryKey: ["post", variables._id] });
 
-      // Dashboard refresh korbe
       queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
@@ -100,10 +99,8 @@ export const useDeletePost = () => {
     },
 
     onSuccess: () => {
-      // Post list refresh korbe
       queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
 
-      // Dashboard refresh korbe
       queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });

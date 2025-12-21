@@ -9,65 +9,33 @@ import {
   Twitter,
   Linkedin,
   Instagram,
-  ArrowLeft,
-  ArrowRight,
   Search,
 } from "lucide-react";
 import { useParams } from "react-router";
 import { useFetchPostById, useFetchPostsByCategory } from "@/api/hooks/post";
 import { useRandomAd } from "@/components/ads/RandomAds";
+import DateFormatter from "@/components/DateFormatter";
 
 // --- Types ---
 
 interface BlogPost {
   title: string;
   date: string;
-  image: string;
+  image: {
+    url: string;
+  };
+  content: string;
+  views: number;
+  createdAt: string;
+  updatedAt: string;
+  tags: {
+    name: string;
+  };
+  category: {
+    name: string;
+    slug: string;
+  };
 }
-
-// --- Constants ---
-
-const ARTICLE_CONTENT = {
-  category: "ইতিহাস",
-  readTime: "1 min read",
-  views: "86",
-  title:
-    "বাংলা জাতিসত্তা: বাংলাদেশ ও পশ্চিমবঙ্গের বাঙালির গর্ব, সংগ্রাম ও পরিচয়",
-  author: "Dainikbangali@Gmail.Com",
-  date: "September 15, 2025",
-  comments: "0",
-  intro:
-    "বাংলা মানে শুধু একটি ভাষা নয়, এটি একটি সম্পূর্ণ সভ্যতা। একদিকে বাংলাদেশের বাঙালি, অন্যদিকে ভারতের পশ্চিমবঙ্গের বাঙালি—দু'জনেই এক ভাষায় কথা বলে, এক সংস্কৃতি বহন করে, এক ঐতিহ্যে বেড়ে উঠেছে। ভৌগোলিক সীমারেখা আলাদা হলেও, বাংলা ভাষা আমাদের এক করে রাখে।",
-  p2: "১৯৫২ সালের ভাষা আন্দোলন থেকে শুরু করে রবীন্দ্রনাথের নোবেল জয়, নজরুলের বিদ্রোহী কবিতা, কিংবা সুকুমার রায়ের রসিকতা—সবই এই বাঙালি জাতিসত্তার অংশ। তাই বলা যায়, বাংলা ভাষা মানে আমাদের আত্মপরিচয়ের শিকড়, আর বাংলাদেশ ও পশ্চিমবঙ্গ মিলেই হলো বাঙালি জাতির পূর্ণ রূপ।",
-  sections: [
-    {
-      title: "বাঙালি কারা?",
-      content:
-        "বাঙালি হলো সেই জাতি যারা বাংলাকে মাতৃভাষা হিসেবে ব্যবহার করে, এবং যাদের সংস্কৃতি, সাহিত্য, সংগীত, খাবার, পোশাক, উৎসব—সবই বাংলা ঐতিহ্যের সঙ্গে মিশে আছে।",
-      bullets: [
-        "বাংলাদেশ: প্রায় ১৭ কোটি মানুষ বাংলা ভাষায় কথা বলে। স্বাধীনতা যুদ্ধ, ভাষা আন্দোলন, এবং সাংস্কৃতিক চেতনা—সবকিছুই এখানে বাংলার মর্যাদা রক্ষায় ভূমিকা রেখেছে।",
-        "পশ্চিমবঙ্গ (ভারত): প্রায় ১০ কোটি মানুষ বাংলা ভাষায় কথা বলে। কলকাতা, শান্তিনিকেতন, দার্জিলিং থেকে সুন্দরবন—সবখানেই বাংলা সংস্কৃতির ছাপ পাওয়া যায়।",
-      ],
-    },
-    {
-      title: "কেন হিন্দিভাষীরা বাংলার বিরোধিতা করে?",
-      content:
-        "ভারতের রাষ্ট্রভাষা হিসেবে হিন্দির আধিপত্য চাপিয়ে দেওয়ার প্রচেষ্টা দীর্ঘদিন ধরে চলছে। ফলে পশ্চিমবঙ্গের বাঙালিরা বহুবার প্রতিবাদ করেছে। অনেক হিন্দিভাষী মানুষ মনে করেন, হিন্দিই ভারতের একমাত্র পরিচয় হওয়া উচিত।",
-      extra:
-        "কিন্তু বাস্তব হলো, ভারত বহুভাষী দেশ, এবং বাংলা ভারতের অন্যতম প্রাচীন ও সমৃদ্ধ ভাষা। তাই যখন বাংলাকে অবহেলা করা হয়, তখন বাঙালি হিন্দি আধিপত্যকে মেনে নেয় না।",
-    },
-    {
-      title: "বাংলা ভাষার গৌরব",
-      list: [
-        "ভাষা আন্দোলন (১৯৫২, বাংলাদেশ): পৃথিবীর একমাত্র জাতি যারা ভাষার জন্য জীবন দিয়েছে। সালাম, রফিক, বরকত, জব্বাররা প্রমাণ করেছিলেন—ভাষা পরিচয়ের চেয়ে বড় কিছু নেই।",
-        "সাহিত্য: রবীন্দ্রনাথ ঠাকুর (নোবেলজয়ী কবি), কাজী নজরুল ইসলাম (জাতীয় কবি), জীবনানন্দ দাশ—সবাই বাংলাকে সমৃদ্ধ করেছেন।",
-      ],
-    },
-  ],
-  conclusion:
-    "বাংলা জাতিসত্তা শুধু একটি স্লোগান নয়, এটি বাংলাদেশ ও পশ্চিমবঙ্গ মিলিয়ে এক অদম্য শক্তি। অন্য ভাষাভাষীরা যখন বাংলাকে ছোট করতে চায়, তখন আমাদের মনে রাখতে হবে—আমরা সেই জাতি যারা ভাষার জন্য জীবন দিয়েছে।",
-  tags: ["বাঙালি", "বাংলা", "বাংলা জাতিসত্তা"],
-};
 
 const SIDEBAR_DATA = {
   recentPosts: [
@@ -114,43 +82,9 @@ const SIDEBAR_DATA = {
   ],
 };
 
-const RECENT_ARTICLES_THUMBS: BlogPost[] = [
-  {
-    title: "ঢাকা-৮ আসনের স্বতন্ত্র প্রার্থী উসমান গনি জলিবিদ্ধ",
-    date: "December 12, 2025",
-    image: "https://picsum.photos/id/1015/80/80",
-  },
-  {
-    title: "ব্যাপক বিক্ষোভের মধ্যে পদত্যাগ করলেন বুলগেরিয়ার প্রধানমন্ত্রী",
-    date: "December 11, 2025",
-    image: "https://picsum.photos/id/1025/80/80",
-  },
-  {
-    title: "মিসাইল ও ড্রোন প্রযুক্তির বিনিময়ে ইউক্রেনকে মিগ-২৯",
-    date: "December 11, 2025",
-    image: "https://picsum.photos/id/1012/80/80",
-  },
-];
-
 // --- Sub-components ---
 
-const ArticleLayout: React.FC<{ post: any }> = ({ post }) => {
-  // ১. Category ID or Slug extraction
-  const categoryId = post?.category?._id;
-  const currentPostId = post?._id;
-
-  // ২. Related Posts Fetch kora (Hook call)
-  const { data: relatedData, isLoading } = useFetchPostsByCategory(
-    categoryId,
-    1,
-    5
-  );
-
-  // ৩. Current post-ta list theke bad dewa (Filter logic)
-  const relatedPosts = relatedData?.data
-    ?.filter((item: any) => item._id !== currentPostId)
-    .slice(0, 4);
-
+const ArticleLayout = ({ post }: { post: BlogPost }) => {
   const ads = useRandomAd("BANNER");
   return (
     <article className="w-full">
@@ -160,7 +94,7 @@ const ArticleLayout: React.FC<{ post: any }> = ({ post }) => {
           {post?.category?.name}
         </span>
         <span className="flex items-center gap-1">
-          <Clock size={14} /> {post?.createdAt}
+          <Clock size={14} /> <DateFormatter date={post?.createdAt} />
         </span>
         <span className="flex items-center gap-1">
           <Eye size={14} /> {post?.views}
@@ -180,7 +114,9 @@ const ArticleLayout: React.FC<{ post: any }> = ({ post }) => {
         </div>
         <div className="flex items-center gap-2">
           <Calendar size={14} />
-          <span>{post?.createdAt}</span>
+          <span>
+            <DateFormatter date={post?.createdAt} />
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <MessageCircle size={14} />
@@ -217,7 +153,7 @@ const ArticleLayout: React.FC<{ post: any }> = ({ post }) => {
         <div className="flex flex-wrap gap-2">
           {post?.tags?.map((tag) => (
             <span
-              key={tag}
+              key={tag._id}
               className="px-3 py-1 bg-gray-50 border border-gray-200 text-gray-600 text-sm rounded hover:bg-gray-100 cursor-pointer transition-colors"
             >
               {tag?.name}
