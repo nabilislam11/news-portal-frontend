@@ -47,11 +47,11 @@ const CategoryPage = () => {
                       </span>
                     )}
                   </div>
-<Link to={`/single-post/${article._id}`}>
-                  <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
-                    {article.title}
-                  </h2>
-</Link>
+                  <Link to={`/single-post/${article._id}`}>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
+                      {article.title}
+                    </h2>
+                  </Link>
 
                   <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                     <span className="flex items-center gap-1">
@@ -66,10 +66,11 @@ const CategoryPage = () => {
                   <p className="text-gray-700 mb-4 leading-relaxed line-clamp-2">
                     <PostContent content={article.content} />
                   </p>
-
-                  <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
-                    Continue Reading →
-                  </button>
+                  <Link to={`/single-post/${article._id}`}>
+                    <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
+                      Continue Reading →
+                    </button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -116,13 +117,10 @@ const CategoryPage = () => {
               <p className="text-gray-600 text-sm">No comments to show.</p>
             </div>
 
-
             {/* Categories */}
             <div className="">
               <CategoriesCard categories={CategoriesList || []} />
             </div>
-
-
 
             {/* Recent Article */}
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
