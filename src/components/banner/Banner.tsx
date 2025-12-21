@@ -4,7 +4,6 @@ import Container from "../container/Container";
 import Slider from "react-slick";
 import { useFetchTrendingPosts } from "@/api/hooks/post";
 
-// ১. একটি ইন্টারফেস তৈরি করা যাতে টাইপস্ক্রিপ্ট বুঝতে পারে ডেটা কেমন হবে
 interface Post {
   _id: string;
   title: string;
@@ -22,7 +21,6 @@ interface Post {
 }
 
 const Banner: React.FC = () => {
-  // টাইপ ডিফাইন করে দেওয়া হলো
   const { data: posts } = useFetchTrendingPosts() as {
     data: Post[] | undefined;
   };
@@ -73,7 +71,7 @@ const Banner: React.FC = () => {
                       {/* CATEGORY - Type casting ব্যবহার করে এরর দূর করা হয়েছে */}
                       <span className="bg-red-500 text-white text-xs sm:text-sm px-3 py-1 rounded-full w-fit">
                         {typeof item.category === "object"
-                          ? (item.category as any)?.name
+                          ? (item.category)?.name
                           : item.category}
                       </span>
 
