@@ -11,7 +11,7 @@ import {
   Search,
 } from "lucide-react";
 import { Link, useParams } from "react-router";
-import { useFetchPostById, useFetchPostsByCategory } from "@/api/hooks/post";
+import { useFetchPostById, useFetchPostsByCategory, type SinglePostData } from "@/api/hooks/post";
 import { useRandomAd } from "@/components/ads/RandomAds";
 import DateFormatter from "@/components/DateFormatter";
 import Loader from "@/components/Loader/Loader";
@@ -62,53 +62,55 @@ const useMetaTags = (metaData: {
     // Helper function to set meta tag
     const setMetaTag = (property: string, content: string, isName = false) => {
       if (!content) return;
-      
-      const attribute = isName ? 'name' : 'property';
-      let element = document.querySelector(`meta[${attribute}="${property}"]`) as HTMLMetaElement;
-      
+
+      const attribute = isName ? "name" : "property";
+      let element = document.querySelector(
+        `meta[${attribute}="${property}"]`
+      ) as HTMLMetaElement;
+
       if (!element) {
-        element = document.createElement('meta');
+        element = document.createElement("meta");
         element.setAttribute(attribute, property);
         document.head.appendChild(element);
       }
-      
-      element.setAttribute('content', content);
+
+      element.setAttribute("content", content);
     };
 
     // Set all meta tags
-    setMetaTag('description', metaData.description || '', true);
-    
+    setMetaTag("description", metaData.description || "", true);
+
     // Open Graph tags
-    setMetaTag('og:type', metaData.type || 'article');
-    setMetaTag('og:url', metaData.url || '');
-    setMetaTag('og:title', metaData.title || '');
-    setMetaTag('og:description', metaData.description || '');
-    setMetaTag('og:image', metaData.image || '');
-    setMetaTag('og:image:width', '1200');
-    setMetaTag('og:image:height', '630');
-    setMetaTag('og:site_name', 'Dainik Bangali');
-    
+    setMetaTag("og:type", metaData.type || "article");
+    setMetaTag("og:url", metaData.url || "");
+    setMetaTag("og:title", metaData.title || "");
+    setMetaTag("og:description", metaData.description || "");
+    setMetaTag("og:image", metaData.image || "");
+    setMetaTag("og:image:width", "1200");
+    setMetaTag("og:image:height", "630");
+    setMetaTag("og:site_name", "Dainik Bangali");
+
     // Twitter tags
-    setMetaTag('twitter:card', 'summary_large_image');
-    setMetaTag('twitter:url', metaData.url || '');
-    setMetaTag('twitter:title', metaData.title || '');
-    setMetaTag('twitter:description', metaData.description || '');
-    setMetaTag('twitter:image', metaData.image || '');
-    
+    setMetaTag("twitter:card", "summary_large_image");
+    setMetaTag("twitter:url", metaData.url || "");
+    setMetaTag("twitter:title", metaData.title || "");
+    setMetaTag("twitter:description", metaData.description || "");
+    setMetaTag("twitter:image", metaData.image || "");
+
     // Article specific tags
     if (metaData.publishedTime) {
-      setMetaTag('article:published_time', metaData.publishedTime);
+      setMetaTag("article:published_time", metaData.publishedTime);
     }
     if (metaData.modifiedTime) {
-      setMetaTag('article:modified_time', metaData.modifiedTime);
+      setMetaTag("article:modified_time", metaData.modifiedTime);
     }
     if (metaData.section) {
-      setMetaTag('article:section', metaData.section);
+      setMetaTag("article:section", metaData.section);
     }
 
     // Cleanup function
     return () => {
-      document.title = 'Dainik Bangali';
+      document.title = "Dainik Bangali";
     };
   }, [metaData]);
 };
@@ -171,31 +173,30 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
   }
 
   // Proper URL formatting - Make sure it's the full absolute URL
-  const shareUrl = typeof window !== 'undefined' 
-    ? window.location.href
-    : '';
-  
-  const shareTitle = post?.title || '';
-  const shareDescription = post?.content?.replace(/<[^>]*>/g, '').substring(0, 200) || '';
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+
+  const shareTitle = post?.title || "";
+  const shareDescription =
+    post?.content?.replace(/<[^>]*>/g, "").substring(0, 200) || "";
 
   // Log for debugging
-  console.log('Share URL:', shareUrl);
-  console.log('Share Title:', shareTitle);
+  console.log("Share URL:", shareUrl);
+  console.log("Share Title:", shareTitle);
 
   // Share handler functions
   const handleFacebookShare = () => {
     const url = encodeURIComponent(shareUrl);
     const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-    
+
     // Open in popup
     const width = 600;
     const height = 400;
     const left = (window.innerWidth - width) / 2;
     const top = (window.innerHeight - height) / 2;
-    
+
     window.open(
       fbShareUrl,
-      'facebook-share-dialog',
+      "facebook-share-dialog",
       `width=${width},height=${height},left=${left},top=${top}`
     );
   };
@@ -204,15 +205,15 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
     const url = encodeURIComponent(shareUrl);
     const text = encodeURIComponent(shareTitle);
     const twitterUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}&hashtags=DainikBangali,News`;
-    
+
     const width = 600;
     const height = 400;
     const left = (window.innerWidth - width) / 2;
     const top = (window.innerHeight - height) / 2;
-    
+
     window.open(
       twitterUrl,
-      'twitter-share-dialog',
+      "twitter-share-dialog",
       `width=${width},height=${height},left=${left},top=${top}`
     );
   };
@@ -220,15 +221,15 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
   const handleLinkedInShare = () => {
     const url = encodeURIComponent(shareUrl);
     const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-    
+
     const width = 600;
     const height = 400;
     const left = (window.innerWidth - width) / 2;
     const top = (window.innerHeight - height) / 2;
-    
+
     window.open(
       linkedinUrl,
-      'linkedin-share-dialog',
+      "linkedin-share-dialog",
       `width=${width},height=${height},left=${left},top=${top}`
     );
   };
@@ -236,22 +237,22 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
   const handleWhatsAppShare = () => {
     const text = encodeURIComponent(`${shareTitle} - ${shareUrl}`);
     const whatsappUrl = `https://api.whatsapp.com/send?text=${text}`;
-    window.open(whatsappUrl, '_blank');
+    window.open(whatsappUrl, "_blank");
   };
 
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
-      alert('✓ Link copied to clipboard!');
+      alert("✓ Link copied to clipboard!");
     } catch (err) {
       // Fallback for older browsers
-      const textArea = document.createElement('textarea');
+      const textArea = document.createElement("textarea");
       textArea.value = shareUrl;
       document.body.appendChild(textArea);
       textArea.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(textArea);
-      alert('✓ Link copied to clipboard!');
+      alert("✓ Link copied to clipboard!");
     }
   };
 
@@ -262,7 +263,7 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
   return (
     <article className="w-full">
       {isLoading && <Loader />}
-      
+
       {/* Meta Header */}
       <div className="flex flex-wrap items-center gap-2 mb-4 text-xs md:text-sm text-gray-500 font-medium">
         <span className="bg-yellow-400 text-black px-2 py-0.5 rounded-sm font-bold uppercase text-[10px] md:text-xs">
@@ -332,7 +333,7 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
             )}
           </div>
         </div>
-        
+
         {/* Custom Share Buttons with Proper Handlers */}
         <div className="flex gap-3">
           {/* Facebook Share */}
@@ -368,8 +369,12 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
             className="w-9 h-9 rounded-full bg-[#25D366] hover:bg-[#20BD5A] flex items-center justify-center transition-colors"
             title="Share on WhatsApp"
           >
-            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            <svg
+              className="w-5 h-5 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
             </svg>
           </button>
 
@@ -379,8 +384,18 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
             className="w-9 h-9 rounded-full bg-gray-600 hover:bg-gray-700 flex items-center justify-center transition-colors"
             title="Copy Link"
           >
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            <svg
+              className="w-5 h-5 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
             </svg>
           </button>
         </div>
@@ -404,7 +419,7 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
               relatedPost
                 .filter((p) => p?._id !== post?._id)
                 .slice(0, 4)
-                .map((relPost) => (
+                .map((relPost :SinglePostData) => (
                   <div
                     key={relPost._id}
                     className="flex gap-4 group cursor-pointer"
@@ -412,7 +427,8 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
                     <div className="w-24 h-24 overflow-hidden flex-shrink-0 rounded-sm">
                       <img
                         src={
-                          relPost?.image?.url || "https://via.placeholder.com/200"
+                          relPost?.image?.url ||
+                          "https://via.placeholder.com/200"
                         }
                         className="w-full h-full object-cover transition-transform group-hover:scale-110"
                         alt={relPost.title}
@@ -606,11 +622,10 @@ export default function BlogSinglePost() {
   const { data: post, isLoading } = useFetchPostById(id);
 
   // Prepare meta data - Use full URL
-  const shareUrl = typeof window !== 'undefined'
-    ? window.location.href
-    : '';
-  const shareDescription = post?.content?.replace(/<[^>]*>/g, '').substring(0, 200) || '';
-  const shareImage = post?.image?.url || 'https://via.placeholder.com/1200x630';
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareDescription =
+    post?.content?.replace(/<[^>]*>/g, "").substring(0, 200) || "";
+  const shareImage = post?.image?.url || "https://via.placeholder.com/1200x630";
 
   // Use custom meta tags hook
   useMetaTags({
@@ -618,11 +633,11 @@ export default function BlogSinglePost() {
     description: shareDescription,
     image: shareImage,
     url: shareUrl,
-    type: 'article',
+    type: "article",
     publishedTime: post?.createdAt,
     modifiedTime: post?.updatedAt,
     section: post?.category?.name,
-    tags: post?.tags?.map(tag => tag.name) || []
+    tags: post?.tags?.map((tag) => tag.name) || [],
   });
 
   if (isLoading || !post) {
