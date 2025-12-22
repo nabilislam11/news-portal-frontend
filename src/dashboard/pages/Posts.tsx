@@ -50,7 +50,6 @@ const Posts = () => {
   const { data, isLoading } = useFetchAllPosts();
   const posts = data as unknown as Post[];
   const deletePost = useDeletePost();
-  console.log(post, "post");
 
   type Tag = {
     id: string;
