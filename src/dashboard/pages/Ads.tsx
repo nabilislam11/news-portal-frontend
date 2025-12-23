@@ -1,4 +1,4 @@
-import React, { useState, type ReactNode } from "react";
+import { useState} from "react";
 import {
   Plus,
   Edit,
@@ -9,11 +9,6 @@ import {
   EyeOff,
   Maximize2,
   Square,
-  X,
-  Upload,
-  Link as LinkIcon,
-  CheckCircle2,
-  AlertCircle,
 } from "lucide-react";
 
 import {
@@ -184,7 +179,7 @@ export default function Ads() {
   );
 }
 
-const Stat = ({ label, value, icon }: any) => (
+const Stat = ({ label, value, icon }: { label: string; value: number; icon: any }) => (
   <div className="bg-white p-6 rounded-xl shadow border">
     <div className="flex items-center gap-3">
       <div className="bg-red-100 p-3 rounded-lg">{icon}</div>

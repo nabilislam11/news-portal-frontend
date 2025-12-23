@@ -11,10 +11,15 @@ import { IoLogoTwitter } from "react-icons/io5";
 import MiniCard from "../banner/MiniCart";
 import type { CardProps } from "../../types/CardProps";
 import Container from "../container/Container";
+<<<<<<< HEAD
 import { useFetchTrendingPosts } from "@/api/hooks/post";
+=======
+import { useFetchAllPosts } from "@/api/hooks/post";
+>>>>>>> a66fd9d1031d397ac21c7a82d5be2f4b8ab162e4
 import { useFetchNavMenu } from "@/api/hooks/navMenu";
 
 type NavItems = {
+  _id: number;
   name: string;
   path?: string;
 };
@@ -24,28 +29,7 @@ type Contract = {
   path?: string;
 };
 
-const navItems: NavItems[] = [
-  {
-    name: " জাতীয়",
-    path: "/",
-  },
-  {
-    name: " রাজনীতি",
-    path: "",
-  },
-  {
-    name: "  বিনোদন",
-    path: "",
-  },
-  {
-    name: " খেলাধুলা",
-    path: "",
-  },
-  {
-    name: "আন্তর্জাতিক",
-    path: "",
-  },
-];
+
 const contract: Contract[] = [
   { name: "Facebook", icon: <FaFacebookF />, path: "" },
   {
@@ -65,6 +49,7 @@ const contract: Contract[] = [
     path: "",
   },
 ];
+<<<<<<< HEAD
 const latestNews: CardProps[] = [
   {
     image: "https://theunitedindian.com/images/crime-13-04-24-M-hero.webp",
@@ -97,6 +82,11 @@ const Footer = () => {
   const navItems = navData as unknown as NavItem[];
   const { data: posts, isLoading } = useFetchTrendingPosts();
 
+=======
+const Footer = () => {
+  const {data:latestNews}=useFetchAllPosts()
+  const {data:navItems}=useFetchNavMenu()
+>>>>>>> a66fd9d1031d397ac21c7a82d5be2f4b8ab162e4
   return (
     <div className=" bg-gray-200 ">
       <Container>
@@ -112,10 +102,18 @@ const Footer = () => {
             <h2 className="font-bold font-secondary text-center  text-[17px] pb-2.5 ">
               বিভাগ
             </h2>
+<<<<<<< HEAD
             <div className="group  flex flex-col items-center   gap-5 text-gray-700 font-medium transition duration-200 ">
               {Array.isArray(navItems) &&
                 navItems.slice(0, 6).map((nav, i) => (
                   <Link
+=======
+            <div className="group  flex flex-col  gap-5 text-gray-700 font-medium transition duration-200 ">
+              { Array.isArray(navItems) && navItems?.slice(0, 6).map((nav: NavItems, i: number) =>
+                nav._id ? (
+                  <Link
+                    to={`/category/${nav._id}`}
+>>>>>>> a66fd9d1031d397ac21c7a82d5be2f4b8ab162e4
                     key={i}
                     to={`/category/${nav._id}`}
                     className="cursor-pointer hover:text-red-600 transition"
@@ -163,6 +161,7 @@ const Footer = () => {
               Latest News
             </h2>
             <div className="  flex flex-col gap-y-2.5  ">
+<<<<<<< HEAD
               {posts?.slice(0, 4).map((item, i) => (
                 <MiniCard
                   key={item._id}
@@ -173,6 +172,10 @@ const Footer = () => {
                   category={item.category}
                   createdAt={item.postDetails?.createdAt}
                 />
+=======
+              {latestNews?.slice(0, 2)?.map((card: CardProps, i: number) => (
+                <MiniCard key={i} {...card} />
+>>>>>>> a66fd9d1031d397ac21c7a82d5be2f4b8ab162e4
               ))}
             </div>
           </div>

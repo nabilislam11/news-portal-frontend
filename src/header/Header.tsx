@@ -19,12 +19,12 @@ import { useFetchNavMenu } from "@/api/hooks/navMenu";
 import { useSearchPosts } from "@/api/hooks/post";
 import { Loader2 } from "lucide-react";
 import Loader from "@/components/Loader/Loader";
+import type { CardProps } from "@/types/CardProps";
 
-interface PostImage {
-  publicId: string;
-  url: string;
-}
 
+
+
+<<<<<<< HEAD
 interface Post {
   _id: string;
   title: string;
@@ -32,8 +32,11 @@ interface Post {
   image?: PostImage;
   createdAt?: string;
 }
+=======
+>>>>>>> a66fd9d1031d397ac21c7a82d5be2f4b8ab162e4
 
 interface NavItem {
+  _id: string;
   name: string;
   path?: string;
 }
@@ -112,9 +115,10 @@ export default function Header() {
                         </p>
                       )}
 
-                    {(searchResults?.data as Post[])?.map((item) => (
+                    {(searchResults?.data as CardProps[])?.map((item) => (
                       <NewsCard
                         key={item._id}
+<<<<<<< HEAD
                         comments={0}
                         date={
                           item.createdAt
@@ -129,6 +133,11 @@ export default function Header() {
                             .substring(0, 150) + "..."
                         }
                         image={item.image?.url || ""}
+=======
+                        createdAt={item?.createdAt}
+                        content={item?.content?.replace(/<[^>]*>/g, '').substring(0, 150) + "..."}
+                        image={item.image} 
+>>>>>>> a66fd9d1031d397ac21c7a82d5be2f4b8ab162e4
                         title={item.title}
                       />
                     ))}
