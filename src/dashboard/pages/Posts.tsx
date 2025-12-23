@@ -51,12 +51,12 @@ const Posts = () => {
   const posts = data as unknown as Post[];
   const deletePost = useDeletePost();
 
-  type Tag = {
-    id: string;
-    name: string;
+  // type Tag = {
+  //   id: string;
+  //   name: string;
 
-    _id: string;
-  };
+  //   _id: string;
+  // };
 
   const column = [
     {
@@ -75,7 +75,7 @@ const Posts = () => {
       header: "Tags",
       cell: ({ row }: { row: { original: Post } }) => (
         <div className="flex gap-1 flex-wrap w-40">
-          {row.original.tags?.map((tag: Tag) => (
+          {row.original.tags?.map((tag: any) => (
             <Badge key={tag._id}>{tag.name}</Badge>
           ))}
         </div>

@@ -13,8 +13,7 @@ export default function NavMenu() {
   const { data: navMenu, isLoading: navMenuLoading } = useFetchNavMenu();
   const { mutate: updateNavMenu, isPending } = useUpdateNavMenu();
   
-  // Get initial IDs from navMenu
-  const initialIds = useMemo(() => {
+  const initialItems = useMemo(() => {
     return navMenu && Array.isArray(navMenu) ? navMenu.map((c) => c._id) : [];
   }, [navMenu]);
 
