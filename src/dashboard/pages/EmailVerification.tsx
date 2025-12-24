@@ -14,13 +14,12 @@ export default function EmailVerification() {
   const [canResend, setCanResend] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const inputRefs = useRef<HTMLInputElement[]>([]);
+  // ১. Ref টাইপ ফিক্স (এটি এখন আর এরর দিবে না)
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const navigate = useNavigate();
 
-  // Backend API URL
   const API_URL = import.meta.env.VITE_BASE_URL + "admin";
 
-  // Timer Countdown Logic
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
@@ -30,7 +29,13 @@ export default function EmailVerification() {
     }
   }, [timer, step]);
 
-  // ১. OTP পাঠানোর ফাংশন (Request OTP)
+  // সেফ ফোকাস ফাংশন
+  const focusInput = (index: number) => {
+    if (index >= 0 && index < 6) {
+      inputRefs.current[index]?.focus();
+    }
+  };
+
   const handleSendEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -42,59 +47,58 @@ export default function EmailVerification() {
         email,
       });
       setStep("verify");
-      setTimer(120); // ২ মিনিট সময়
+      setTimer(120);
       setCanResend(false);
       toast.success(response.data.message || "OTP sent successfully!");
     } catch (err: any) {
       const msg = err.response?.data?.message || "Failed to send OTP.";
-      setError(msg);
+      setError(msg); // এরর সেট করা
       toast.error(msg);
     } finally {
       setLoading(false);
     }
   };
 
-  // ২. OTP ভেরিফাই করার ফাংশন (Verify OTP)
   const handleVerifyOTP = async () => {
     const otpValue = otp.join("");
     if (otpValue.length !== 6) return setError("Please enter all 6 digits");
 
     setLoading(true);
-    setError("");
+    setError(""); // রিকোয়েস্টের আগে এরর ক্লিয়ার করা
     try {
       const response = await axios.post(`${API_URL}/verify-otp`, {
         email,
         otp: otpValue,
       });
-
       setSuccess(true);
       toast.success(response.data.message || "OTP Verified!");
 
-      // সফল হলে Reset Password পেজে রিডাইরেক্ট (Email সহ)
       setTimeout(() => {
         navigate(`/reset-password?email=${encodeURIComponent(email)}`);
-      }, 2000);
+      }, 1500);
     } catch (err: any) {
-      const msg = err.response?.data?.message || "Invalid OTP.";
-      setError(msg);
+      // ৩. ব্যাকএন্ডের এরর মেসেজ ধরার লজিক
+      const msg =
+        err.response?.data?.message || "Invalid OTP. Please try again.";
+      setError(msg); // UI-তে এরর মেসেজ দেখানোর জন্য
       toast.error(msg);
       setOtp(["", "", "", "", "", ""]);
-      inputRefs.current[0]?.focus();
+      focusInput(0);
     } finally {
       setLoading(false);
     }
   };
 
-  // ৩. পুনরায় ওটিপি পাঠানো (Resend)
   const handleResend = async () => {
     if (!canResend) return;
     setLoading(true);
+    setError("");
     try {
       await axios.post(`${API_URL}/request-verification`, { email });
       setTimer(120);
       setCanResend(false);
       setOtp(["", "", "", "", "", ""]);
-      inputRefs.current[0]?.focus();
+      focusInput(0);
       toast.success("New OTP sent!");
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Resend failed.");
@@ -103,29 +107,29 @@ export default function EmailVerification() {
     }
   };
 
-  // OTP Input Logic
   const handleChange = (index: number, value: string) => {
     if (value && !/^\d+$/.test(value)) return;
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
     setOtp(newOtp);
-    if (value && index < 5) inputRefs.current[index + 1]?.focus();
+    if (value && index < 5) focusInput(index + 1); // পরের ঘরে যাওয়া
   };
 
   const handleKeyDown = (
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0)
-      inputRefs.current[index - 1]?.focus();
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      focusInput(index - 1); // আগের ঘরে ফেরা
+    }
   };
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5 font-primary">
         <div className="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md w-full">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold">Email Verified!</h1>
+          <h1 className="text-2xl font-bold">Verified!</h1>
           <p className="text-gray-600">Redirecting to Reset Password page...</p>
         </div>
       </div>
@@ -133,32 +137,38 @@ export default function EmailVerification() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-5">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-5 font-primary">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border-t-4 border-red-500">
         {step === "send" ? (
           <form onSubmit={handleSendEmail} className="space-y-6">
             <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail className="text-red-500 w-8 h-8" />
-              </div>
-              <h1 className="text-2xl font-bold">Verify Your Email</h1>
-            </div>
-            {error && (
-              <p className="text-red-500 text-sm text-center font-medium bg-red-50 p-2 rounded">
-                {error}
+              <Mail className="text-red-500 w-14 h-14 mx-auto mb-3" />
+              <h1 className="text-2xl font-bold text-gray-800">Verify Email</h1>
+              <p className="text-gray-500 text-sm mt-1">
+                Request an OTP to reset password
               </p>
+            </div>
+
+            {/* ১ নম্বর ধাপের এরর রেন্ডারিং */}
+            {error && (
+              <div className="bg-red-50 border-l-4 border-red-500 p-3 animate-pulse">
+                <p className="text-red-700 text-sm font-medium text-center">
+                  {error}
+                </p>
+              </div>
             )}
+
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="w-full p-3.5 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition-all"
+              className="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition-all"
             />
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-3.5 rounded-lg font-bold disabled:bg-gray-400"
+              className="w-full bg-red-500 hover:bg-red-600 text-white py-3.5 rounded-lg font-bold shadow-md transition-all active:scale-95"
             >
               {loading ? "Sending..." : "Send Verification Code"}
             </button>
@@ -166,61 +176,77 @@ export default function EmailVerification() {
         ) : (
           <div className="space-y-6">
             <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="text-red-500 w-8 h-8" />
-              </div>
-              <h1 className="text-2xl font-bold">Enter OTP</h1>
-              <p className="text-sm text-gray-500 mt-1">
-                Code sent to: <b>{email}</b>
+              <Shield className="text-red-500 w-14 h-14 mx-auto mb-3" />
+              <h1 className="text-2xl font-bold text-gray-800">Enter OTP</h1>
+              <p className="text-sm text-gray-500">
+                Code sent to:{" "}
+                <span className="text-gray-800 font-semibold">{email}</span>
               </p>
             </div>
+
+            {/* ওটিপি ধাপের এরর রেন্ডারিং (এটি আগে ছিল না) */}
             {error && (
-              <p className="text-red-500 text-sm text-center font-medium bg-red-50 p-2 rounded">
-                {error}
-              </p>
+              <div className="bg-red-50 border-l-4 border-red-500 p-3 animate-shake">
+                <p className="text-red-700 text-sm font-medium text-center">
+                  {error}
+                </p>
+              </div>
             )}
+
             <div className="flex gap-2 justify-center">
               {otp.map((digit, i) => (
                 <input
                   key={i}
-                  ref={(el) => (inputRefs.current[i] = el!)}
+                  // ৪. Ref অ্যাসাইনমেন্ট ফিক্স
+                  ref={(el) => {
+                    inputRefs.current[i] = el;
+                  }}
                   type="text"
                   maxLength={1}
                   value={digit}
                   onChange={(e) => handleChange(i, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(i, e)}
-                  className="w-12 h-14 text-center border-2 rounded-lg text-xl font-bold focus:border-red-500 outline-none transition-all"
+                  className="w-12 h-14 text-center border-2 rounded-lg text-xl font-bold bg-gray-50 border-gray-200 focus:border-red-500 outline-none transition-all focus:bg-white"
                 />
               ))}
             </div>
+
             <div className="text-center">
               {!canResend ? (
-                <p className="text-2xl font-bold text-red-500">
-                  {Math.floor(timer / 60)}:
-                  {(timer % 60).toString().padStart(2, "0")}
-                </p>
+                <div className="text-gray-500 text-sm">
+                  Expires in{" "}
+                  <span className="text-red-600 font-bold">
+                    {Math.floor(timer / 60)}:
+                    {(timer % 60).toString().padStart(2, "0")}
+                  </span>
+                </div>
               ) : (
                 <button
                   onClick={handleResend}
                   disabled={loading}
-                  className="text-red-500 font-medium flex items-center gap-2 mx-auto"
+                  className="text-red-500 font-semibold hover:text-red-600 flex items-center gap-2 mx-auto text-sm"
                 >
-                  <RefreshCw size={16} /> Resend Code
+                  <RefreshCw
+                    size={16}
+                    className={loading ? "animate-spin" : ""}
+                  />{" "}
+                  Resend New Code
                 </button>
               )}
             </div>
+
             <button
               onClick={handleVerifyOTP}
               disabled={loading || otp.join("").length !== 6}
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-3.5 rounded-lg font-bold disabled:bg-gray-400"
+              className="w-full bg-red-500 hover:bg-red-600 text-white py-3.5 rounded-lg font-bold shadow-md transition-all active:scale-95 disabled:bg-gray-400"
             >
-              {loading ? "Verifying..." : "Verify Email"}
+              {loading ? "Verifying..." : "Verify OTP"}
             </button>
             <button
               onClick={() => setStep("send")}
-              className="w-full text-gray-500 text-sm flex items-center justify-center gap-2"
+              className="w-full text-gray-500 text-sm flex items-center justify-center gap-2 hover:text-red-500 transition-colors"
             >
-              <ArrowLeft size={16} /> Change Email
+              <ArrowLeft size={16} /> Back to Change Email
             </button>
           </div>
         )}
