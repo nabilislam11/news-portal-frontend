@@ -5,6 +5,7 @@ import Container from "../container/Container";
 import Slider from "react-slick";
 import { useFetchTrendingPosts } from "@/api/hooks/post";
 import DateFormatter from "../DateFormatter";
+import { Link } from "react-router";
 
 // 1. Update interface to match your Console Log
 interface Post {
@@ -69,10 +70,12 @@ const Banner: React.FC = () => {
                         {item.category?.name || "General"}
                       </span>
 
-                      <h2 className="text-white font-medium text-xl leading-snug line-clamp-2">
-                        {/* FIX: Accessing via postDetails */}
-                        {item.postDetails.title}
-                      </h2>
+                      <Link to={`/single-post/${item._id}`}>
+                        <h2 className="text-white font-medium text-xl leading-snug line-clamp-2">
+                          {/* FIX: Accessing via postDetails */}
+                          {item.postDetails.title}
+                        </h2>
+                      </Link>
 
                       <div className="flex items-center gap-x-1.5 text-gray-300 text-sm">
                         <MdWatchLater />

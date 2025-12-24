@@ -18,7 +18,7 @@ import type { UserInput } from "@/validators/user";
 // import { useAuth } from "react-express-auth-kit"
 import { toast } from "sonner";
 import axios from "axios";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 // ১. useState এবং আইকনগুলো ইম্পোর্ট করুন
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
@@ -48,7 +48,7 @@ export function LoginForm({ className, form, ...props }: LoginFormProps) {
     console.log("Login data:", data);
     // login(data.email,data.password)
     axios
-      .post("http://localhost:4100/api/v1/admin/login", data, {
+      .post(import.meta.env.VITE_BASE_URL + "admin/login", data, {
         withCredentials: true,
       })
       .then((res) => {
@@ -90,12 +90,12 @@ export function LoginForm({ className, form, ...props }: LoginFormProps) {
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
+                  <Link
+                    to={`/verify-otp`}
                     className="ml-auto text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
-                  </a>
+                  </Link>
                 </div>
 
                 {/* ৪. Input এবং আইকন বাটনকে একটি relative div এর মধ্যে রাখা হলো */}

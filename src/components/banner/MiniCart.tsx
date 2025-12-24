@@ -1,4 +1,3 @@
-
 import { Clock } from "lucide-react";
 import DateFormatter from "../DateFormatter";
 
@@ -7,14 +6,18 @@ export interface CardProps {
   _id?: string;
   title: string;
   // image can be the full object from API or just a string URL
-  image?: {
-    url?: string;
-  } | string; 
+  image?:
+    | {
+        url?: string;
+      }
+    | string;
   // category can be the full object or just a string name
-  category?: {
-    _id?: string;
-    name?: string;
-  } | string;
+  category?:
+    | {
+        _id?: string;
+        name?: string;
+      }
+    | string;
   createdAt?: string;
   content?: string;
 }
