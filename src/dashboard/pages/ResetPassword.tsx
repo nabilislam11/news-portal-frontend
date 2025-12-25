@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Eye, EyeOff, Lock, CheckCircle, X } from "lucide-react";
+import { Eye, EyeOff, Lock, CheckCircle } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate, useSearchParams } from "react-router";
