@@ -1,32 +1,33 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../axios";
+import { api } from "../axios"; // Ensure this points to your configured axios instance
 
-// logOut.ts hook file
 export const useLogout = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
-      // route-ta backend er sathe milie dekhun
+      // Ensure this route matches your backend (e.g. /auth/logout)
       const res = await api.post("/auth/logout");
       return res.data;
     },
     onSuccess: () => {
-      // 1. LocalStorage clear korun (jodi thake)
+      // 1. Clear any LocalStorage items (if you used them)
       localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
 
-      // 2. React Query cache puro clear kore din
+      // 2. Clear React Query Cache (Removes all cached user data immediately)
       queryClient.clear();
 
-      // 3. User-ke login-e pathan
-      window.location.href = "/login"; // ba navigate("/login")
+      // 3. Force Redirect to Login (Hard reload ensures no memory leaks)
+      window.location.href = "/login";
     },
     onError: (error: any) => {
       console.error(
         "Logout error details:",
         error.response?.data || error.message
       );
-      // Jodi server error-o dey, tobuo safety-r jonno user-ke login-e pathiye cache clear kora bhalo
+
+      // Safety Fallback: Even if the server errors, we still clear the client session
       queryClient.clear();
       window.location.href = "/login";
     },
