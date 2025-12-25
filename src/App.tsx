@@ -1,10 +1,6 @@
 import "./App.css";
 import Login from "./dashboard/pages/Login";
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import RootLayout from "./pages/RootLayout";
 import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
