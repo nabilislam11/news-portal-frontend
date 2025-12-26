@@ -9,7 +9,7 @@ const ProtectedRoute: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // 👇 FIX: Added "?t=${Date.now()}" to force a new request every time
+        // 👇 FIX: Using raw axios with timestamp to prevent caching
         await axios.get(
           `${import.meta.env.VITE_BASE_URL}admin/me?t=${Date.now()}`,
           {
