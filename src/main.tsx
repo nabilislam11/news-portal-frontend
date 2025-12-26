@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+//
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
@@ -11,10 +11,10 @@ const authConfig = {
 };
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <AuthProvider config={authConfig}>
-      <App />
-      <Toaster />
-    </AuthProvider>
-  </StrictMode>
+  // <StrictMode>
+  <AuthProvider config={authConfig}>
+    <App />
+    <Toaster />
+  </AuthProvider>
+  // </StrictMode>
 );
