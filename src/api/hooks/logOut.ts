@@ -20,7 +20,7 @@ export const useLogout = () => {
       queryClient.clear();
 
       // 3. Force Redirect to Login (Hard reload ensures no memory leaks)
-      window.location.href = "/login";
+      // window.location.href = "/login";
     },
     onError: (error: any) => {
       console.error(
@@ -30,7 +30,7 @@ export const useLogout = () => {
 
       // Safety Fallback: Even if the server errors, we still clear the client session
       queryClient.clear();
-      window.location.href = "/login";
+      // window.location.href = "/login";
     },
   });
 };
