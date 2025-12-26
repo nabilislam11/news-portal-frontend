@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router";
-// 👇 Use your configured 'api' instead of raw 'axios'
-import { api } from "../axios";
+import axios from "axios";
 
 const ProtectedRoute: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -10,9 +9,13 @@ const ProtectedRoute: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // 👇 CRITICAL FIX: Add cache-busting timestamp
-        // This ensures the browser NEVER uses a cached "200 OK" response
-        await api.get(`/admin/me?t=${Date.now()}`);
+        // 👇 FIX: Added "?t=${Date.now()}" to force a new request every time
+        await axios.get(
+          `${import.meta.env.VITE_BASE_URL}admin/me?t=${Date.now()}`,
+          {
+            withCredentials: true, // Required for cookies
+          }
+        );
 
         setIsAuthenticated(true);
       } catch (err) {
