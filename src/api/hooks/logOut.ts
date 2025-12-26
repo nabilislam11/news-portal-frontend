@@ -7,8 +7,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: async () => {
       // Ensure this route matches your backend (e.g. /auth/logout)
-      const res = await api.post("admin/logout");
-      console.log(res, res.data);
+      const res = await api.delete("admin/logout");
       return res.data;
     },
     onSuccess: () => {
@@ -20,7 +19,7 @@ export const useLogout = () => {
       queryClient.clear();
 
       // 3. Force Redirect to Login (Hard reload ensures no memory leaks)
-      // window.location.href = "/login";
+      window.location.href = "/login";
     },
     onError: (error: any) => {
       console.error(
@@ -30,7 +29,7 @@ export const useLogout = () => {
 
       // Safety Fallback: Even if the server errors, we still clear the client session
       queryClient.clear();
-      // window.location.href = "/login";
+      window.location.href = "/login";
     },
   });
 };
