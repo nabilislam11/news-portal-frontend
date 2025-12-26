@@ -7,7 +7,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: async () => {
       // Ensure this route matches your backend (e.g. /auth/logout)
-      const res = await api.post("auth/logout");
+      const res = await api.post("admin/logout");
       return res.data;
     },
     onSuccess: () => {
