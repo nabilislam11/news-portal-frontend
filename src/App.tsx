@@ -23,6 +23,7 @@ import EmailVerification from "./dashboard/pages/EmailVerification";
 import ResetPassword from "./dashboard/pages/ResetPassword";
 import { HelmetProvider } from "react-helmet-async";
 import SocialMediaDashboard from "./dashboard/pages/SocialMediaDashboard";
+import ChangePassword from "./components/changepassword/ChangePassword";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
           { path: "subscription", element: <Subscription /> },
           { path: "ads", element: <Ads /> },
           { path: "socialmedia", element: <SocialMediaDashboard /> },
+          { path: "change-password", element: <ChangePassword /> },
         ],
       },
     ],
