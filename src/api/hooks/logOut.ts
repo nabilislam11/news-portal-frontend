@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../axios"; // Ensure this points to your configured axios instance
+import { api } from "../axios";
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
@@ -7,7 +7,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: async () => {
       // Ensure this route matches your backend (e.g. /auth/logout)
-      const res = await api.post("/auth/logout");
+      const res = await api.post("auth/logout");
       return res.data;
     },
     onSuccess: () => {
