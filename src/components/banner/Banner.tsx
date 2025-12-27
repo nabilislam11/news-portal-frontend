@@ -92,7 +92,7 @@ const Banner: React.FC = () => {
 
           {/* Trending sidebar */}
           <div className="w-full md:w-[40%] flex flex-col gap-y-4">
-            <h2 className="font-primary font-semibold text-2xl">Trending</h2>
+            <h2 className="font-primary font-semibold text-2xl">জনপ্রিয়</h2>
             <div className="w-full bg-red-500 h-0.5"></div>
 
             <div className="flex flex-col gap-y-2.5">

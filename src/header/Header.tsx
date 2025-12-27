@@ -20,6 +20,7 @@ import { useSearchPosts } from "@/api/hooks/post";
 import { Loader2 } from "lucide-react";
 import Loader from "@/components/Loader/Loader";
 import type { CardProps } from "@/types/CardProps";
+import CallNowButton from "@/components/callButton/CallNowButton";
 
 interface NavItem {
   _id: string;
@@ -54,7 +55,7 @@ export default function Header() {
                   <Link
                     key={nav._id}
                     to={`/category/${nav._id}`}
-                    className="cursor-pointer hover:text-red-600 transition"
+                    className=" font-bold cursor-pointer hover:text-red-600 transition"
                   >
                     {nav.name}
                   </Link>
@@ -62,6 +63,7 @@ export default function Header() {
             </div>
 
             {/* Search Section */}
+
             <div className="mx-4 hidden lg:flex max-w-[250px]">
               <Dialog onOpenChange={(open) => !open && setSearchTerm("")}>
                 <DialogTrigger className="ms-auto" asChild>
@@ -170,7 +172,7 @@ export default function Header() {
                   <Link
                     key={nav._id}
                     to={`/category/${nav._id}`}
-                    className="hover:text-red-600 p-2 text-center border rounded-md"
+                    className="font-semibold  hover:text-red-600 p-2 text-center border rounded-md"
                     onClick={() => setIsOpen(false)}
                   >
                     {nav.name}
@@ -178,6 +180,10 @@ export default function Header() {
                 ))}
             </div>
           )}
+        </div>
+        <div className="md:hidden ">
+          {" "}
+          <CallNowButton />
         </div>
       </Container>
     </header>

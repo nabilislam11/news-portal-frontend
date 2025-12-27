@@ -11,9 +11,9 @@ const Home = () => {
       <div className="bg-white pt-[126px]">
         <MarqueeTag></MarqueeTag>
         <Banner></Banner>
-        <FavoriteNews></FavoriteNews>
-        <Ads></Ads>
         <EveryDay></EveryDay>
+        <Ads></Ads>
+        <FavoriteNews></FavoriteNews>
         <NewsItems></NewsItems>
       </div>
     </>

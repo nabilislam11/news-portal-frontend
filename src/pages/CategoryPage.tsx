@@ -43,99 +43,101 @@ const CategoryPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content Area */}
           <div className="lg:col-span-2">
-            {/* Articles */}
-            {Array.isArray(displayPosts)
-              ? displayPosts.map((article: CardProps) => (
-                  <div
-                    key={article._id}
-                    className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"
-                  >
-                    <img
-                      src={article?.image?.url}
-                      alt={article.title}
-                      className="w-full h-64 object-cover"
-                    />
-                    <div className="p-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        {article.category && (
-                          <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
-                            {article.category.name}
+            {/* Articles Grid - Mobile: 1 column, LG: 2 columns */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+              {Array.isArray(displayPosts)
+                ? displayPosts.map((article: CardProps) => (
+                    <div
+                      key={article._id}
+                      className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                    >
+                      <img
+                        src={article?.image?.url}
+                        alt={article.title}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          {article.category && (
+                            <span className="bg-yellow-400 text-gray-900 px-2 py-1 rounded text-xs font-semibold">
+                              {article.category.name}
+                            </span>
+                          )}
+                        </div>
+                        <Link to={`/single-post/${article._id}`}>
+                          <h2 className="text-lg lg:text-xl font-bold text-gray-800 mb-2 hover:text-pink-600 cursor-pointer transition-colors line-clamp-2">
+                            {article.title}
+                          </h2>
+                        </Link>
+
+                        <div className="flex items-center gap-3 text-xs text-gray-600 mb-3">
+                          <span className="flex items-center gap-1">
+                            <span className="text-pink-600">👤</span> Author
                           </span>
-                        )}
-                      </div>
-                      <Link to={`/single-post/${article._id}`}>
-                        <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
-                          {article.title}
-                        </h2>
-                      </Link>
-
-                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                        <span className="flex items-center gap-1">
-                          <span className="text-pink-600">👤</span> Author
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <span className="text-pink-600">📅</span>{" "}
-                          <DateFormatter date={article.createdAt} />
-                        </span>
-                      </div>
-
-                      <p className="text-gray-700 mb-4 leading-relaxed line-clamp-2">
-                        <PostContent content={article.content} />
-                      </p>
-                      <Link to={`/single-post/${article._id}`}>
-                        <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
-                          Continue Reading →
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
-                ))
-              : displayPosts?.posts?.map((article: CardProps) => (
-                  <div
-                    key={article._id}
-                    className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"
-                  >
-                    <img
-                      src={article?.image?.url}
-                      alt={article.title}
-                      className="w-full h-64 object-cover"
-                    />
-                    <div className="p-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        {article.category && (
-                          <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
-                            {article.category.name}
+                          <span className="flex items-center gap-1">
+                            <span className="text-pink-600">📅</span>
+                            <DateFormatter date={article.createdAt} />
                           </span>
-                        )}
+                        </div>
+
+                        <p className="text-gray-700 text-sm mb-3 leading-relaxed line-clamp-2">
+                          <PostContent content={article.content} />
+                        </p>
+                        <Link to={`/single-post/${article._id}`}>
+                          <button className="text-pink-600 text-sm font-semibold hover:text-pink-700 transition-colors">
+                            Continue Reading →
+                          </button>
+                        </Link>
                       </div>
-                      <Link to={`/single-post/${article._id}`}>
-                        <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
-                          {article.title}
-                        </h2>
-                      </Link>
-
-                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                        <span className="flex items-center gap-1">
-                          <span className="text-pink-600">👤</span> Author
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <span className="text-pink-600">📅</span>{" "}
-                          <DateFormatter date={article.createdAt} />
-                        </span>
-                      </div>
-
-                      <p className="text-gray-700 mb-4 leading-relaxed line-clamp-2">
-                        <PostContent content={article.content} />
-                      </p>
-
-                      <Link to={`/single-post/${article._id}`}>
-                        <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
-                          Continue Reading →
-                        </button>
-                      </Link>
                     </div>
-                  </div>
-                ))}
+                  ))
+                : displayPosts?.posts?.map((article: CardProps) => (
+                    <div
+                      key={article._id}
+                      className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                    >
+                      <img
+                        src={article?.image?.url}
+                        alt={article.title}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          {article.category && (
+                            <span className="bg-yellow-400 text-gray-900 px-2 py-1 rounded text-xs font-semibold">
+                              {article.category.name}
+                            </span>
+                          )}
+                        </div>
+                        <Link to={`/single-post/${article._id}`}>
+                          <h2 className="text-lg lg:text-xl font-bold text-gray-800 mb-2 hover:text-pink-600 cursor-pointer transition-colors line-clamp-2">
+                            {article.title}
+                          </h2>
+                        </Link>
+
+                        <div className="flex items-center gap-3 text-xs text-gray-600 mb-3">
+                          <span className="flex items-center gap-1">
+                            <span className="text-pink-600">👤</span> Author
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <span className="text-pink-600">📅</span>
+                            <DateFormatter date={article.createdAt} />
+                          </span>
+                        </div>
+
+                        <p className="text-gray-700 text-sm mb-3 leading-relaxed line-clamp-2">
+                          <PostContent content={article.content} />
+                        </p>
+
+                        <Link to={`/single-post/${article._id}`}>
+                          <button className="text-pink-600 text-sm font-semibold hover:text-pink-700 transition-colors">
+                            Continue Reading →
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+            </div>
           </div>
 
           {/* Sidebar */}

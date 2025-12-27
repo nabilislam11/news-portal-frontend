@@ -1,13 +1,13 @@
-import React from "react";
 import Container from "../container/Container";
 import Marquee from "react-fast-marquee";
 import { useFetchAllPosts } from "@/api/hooks/post";
 import type { CardProps } from "@/types/CardProps";
+import CallNowButton from "../callButton/CallNowButton";
 
 const MarqueeTag: React.FC = () => {
-  const {data}=useFetchAllPosts()
+  const { data } = useFetchAllPosts();
   return (
-    <div className="h-[55px] flex items-center bg-red-500 shadow-md w-full overflow-hidden">
+    <div className="h-[55px] flex items-center bg-red-600 shadow-md w-full overflow-hidden">
       <Container className="w-full">
         <div className="flex items-center gap-x-3 w-full overflow-hidden">
           {/* LABEL */}
@@ -27,10 +27,17 @@ const MarqueeTag: React.FC = () => {
               pauseOnHover={true}
               gradient={false}
               className="text-white text-xs md:text-sm"
-            >{
-              data?.map((post : CardProps,i:number)=><span key={i} className="px-2">{post.title}</span>)
-            }
+            >
+              {data?.map((post: CardProps, i: number) => (
+                <span key={i} className="px-2">
+                  {post.title}
+                </span>
+              ))}
             </Marquee>
+          </div>
+          <div className="  ">
+            {" "}
+            <CallNowButton />
           </div>
         </div>
       </Container>

@@ -18,7 +18,7 @@ const NewsItems = () => {
 
   return (
     <div>
-      <div className=" bg-gray-50  pb-15">
+      <div className=" py-8 g-gray-50">
         <Container>
           {/* Header */}
           <div className="mb-8">

@@ -41,7 +41,7 @@ const FavoriteNews = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 1,
     slidesToScroll: 1,
     arrows: true,
     autoplay: true,
@@ -81,22 +81,25 @@ const FavoriteNews = () => {
         </div>
 
         {/* Slider Section */}
-        <div className="slider-container  relative">
-          <Slider {...settings}>
-            {Array.isArray(posts) &&
-              posts.map((card: CardProps, i: number) => (
-                <div key={card._id || i} className="px-2">
-                  <EveryDayCard {...card} />
-                </div>
-              ))}
-          </Slider>
-        </div>
+        <div className="">
+          <div className="slider-container w-[50%]  relative">
+            <Slider {...settings}>
+              {Array.isArray(posts) &&
+                posts.map((card: CardProps, i: number) => (
+                  <div key={card._id || i} className="px-2">
+                    <EveryDayCard {...card} />
+                  </div>
+                ))}
+            </Slider>
+          </div>
 
-        {/* View All Button */}
-        <div className="text-center mt-10 mb-10 md:mb-0">
-          <Link to="/category/all">
-            <Button>সব সংবাদ দেখুন</Button>
-          </Link>
+          {/* View All Button */}
+          <div className="text-center mt-10 mb-10 md:mb-0">
+            <Link to="/category/all">
+              <Button>সব সংবাদ দেখুন</Button>
+            </Link>
+          </div>
+          <div className=""></div>
         </div>
       </Container>
     </div>
