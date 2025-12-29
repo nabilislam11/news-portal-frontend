@@ -26,6 +26,7 @@ import SocialMediaDashboard from "./dashboard/pages/SocialMediaDashboard";
 import ChangePassword from "./components/changepassword/ChangePassword";
 import TermsAndCondition from "./pages/TermsAndCondition";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CategoriesAll from "./pages/CategoriseAll";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -99,6 +100,10 @@ const router = createBrowserRouter([
       {
         path: "/single-post/:id",
         element: <BlogSinglePost />,
+      },
+      {
+        path: "/categories-all",
+        element: <CategoriesAll />,
       },
       {
         path: "/privacy-policy",

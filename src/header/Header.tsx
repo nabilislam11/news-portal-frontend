@@ -4,6 +4,7 @@ import Logo from "../components/logo/Logo";
 import { Link } from "react-router";
 import { CiSearch } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
+import { RiGalleryView2 } from "react-icons/ri";
 import {
   Dialog,
   DialogClose,
@@ -60,8 +61,10 @@ export default function Header() {
                     {nav.name}
                   </Link>
                 ))}
+              <Link to="/categories-all">
+                <RiGalleryView2 className="ml-2 text-gray-700 " size={30} />
+              </Link>
             </div>
-
             {/* Search Section */}
 
             <div className="mx-4 hidden lg:flex max-w-[250px]">
@@ -166,18 +169,27 @@ export default function Header() {
 
           {/* Mobile Menu Content */}
           {isOpen && (
-            <div className="md:hidden bg-white border-t border-gray-200 py-3 grid grid-cols-2 gap-2">
+            <div className="md:hidden bg-white border-t border-gray-200 py-3 grid grid-cols-2 gap-2 px-2">
               {Array.isArray(navItems) &&
                 navItems.map((nav) => (
                   <Link
                     key={nav._id}
                     to={`/category/${nav._id}`}
-                    className="font-semibold  hover:text-red-600 p-2 text-center border rounded-md"
+                    className="font-semibold hover:text-red-600 p-2 text-center border rounded-md"
                     onClick={() => setIsOpen(false)}
                   >
                     {nav.name}
                   </Link>
                 ))}
+
+              {/* এই h1 ট্যাগটি এখন ২ কলাম জুড়ে থাকবে এবং সেন্টারে দেখাবে */}
+              <Link
+                to="/categories-all"
+                onClick={() => setIsOpen(false)}
+                className="col-span-2 font-semibold hover:text-red-600 p-2 text-center border rounded-md bg-gray-50 active:scale-95 transition-all"
+              >
+                All Category
+              </Link>
             </div>
           )}
         </div>

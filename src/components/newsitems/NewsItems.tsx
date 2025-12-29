@@ -1,7 +1,6 @@
 import { Link } from "react-router";
 import CategoriesCard from "../categoriescard/CategoriesCard";
 import Container from "../container/Container";
-import TagCard from "../tag/tagcard/TagCard";
 import { Button } from "../ui/button";
 import NewsCard from "./NewsCard";
 import { useFetchAllCategories } from "@/api/hooks/category";
@@ -47,9 +46,9 @@ const NewsItems = () => {
                 <div className="">
                   <CategoriesCard categories={categories || []} />
                 </div>
-                <div className="">
+                {/* <div className="">
                   <TagCard tags={tags || []} />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
