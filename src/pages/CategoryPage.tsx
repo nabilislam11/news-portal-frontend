@@ -86,7 +86,7 @@ const CategoryPage = () => {
                         className="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-500"
                       />
                       {article.category && (
-                        <Badge className="absolute top-4 left-4 bg-yellow-400 text-black hover:bg-yellow-500 border-none">
+                        <Badge className="absolute top-4 left-4 bg-red-500 text-white hover:bg-red-500 border-none">
                           {article.category.name}
                         </Badge>
                       )}
@@ -117,7 +117,7 @@ const CategoryPage = () => {
 
                       <Link
                         to={`/single-post/${article._id}`}
-                        className="mt-auto inline-flex items-center text-pink-600 font-bold text-sm hover:gap-2 transition-all"
+                        className="mt-auto inline-flex items-center text-red-500 font-bold text-sm hover:gap-2 transition-all"
                       >
                         CONTINUE READING <span className="ml-1 text-lg">→</span>
                       </Link>
