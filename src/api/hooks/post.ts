@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../axios";
 
 // --- Types & Interfaces ---
+
 interface SearchParams {
   query?: string;
   categoryName?: string;
@@ -24,6 +25,11 @@ interface CategoryPostResponse {
   success: boolean;
   data: any[];
   categoryName: string;
+  meta?: {
+    filterType: string;
+    filterName: string;
+    filterId: string;
+  };
   pagination: {
     total: number;
     page: number;
@@ -34,16 +40,22 @@ interface CategoryPostResponse {
 
 // --- Post Hooks ---
 
+/**
+ * সব পোস্ট ফেচ করার হুক
+ */
 export const useFetchAllPosts = () => {
   return useQuery({
     queryKey: ["posts", "all"],
     queryFn: async () => {
       const res = await api.get("post");
-      return res.data.data;
+      return res.data.data; // সরাসরি অ্যারে রিটার্ন করছে
     },
   });
 };
 
+/**
+ * নির্দিষ্ট আইডি অনুযায়ী সিঙ্গেল পোস্ট ফেচ করার হুক
+ */
 export const useFetchPostById = (id: string) => {
   return useQuery({
     queryKey: ["posts", id],
@@ -55,6 +67,9 @@ export const useFetchPostById = (id: string) => {
   });
 };
 
+/**
+ * নতুন পোস্ট তৈরি করার হুক
+ */
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -65,12 +80,16 @@ export const useCreatePost = () => {
       return res.data.data;
     },
     onSuccess: () => {
+      // সব পোস্ট সংক্রান্ত কুয়েরি রিফ্রেশ করবে
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 };
 
+/**
+ * পোস্ট আপডেট করার হুক (ব্রেকিং নিউজে অ্যাড করার জন্যও ব্যবহৃত হয়)
+ */
 export const useUpdatePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -87,14 +106,17 @@ export const useUpdatePost = () => {
       return res.data.data;
     },
     onSuccess: (_data, variables) => {
-      // রিলোড ছাড়া আপডেট নিশ্চিত করার জন্য কি-গুলো রিফ্রেশ করা
-      queryClient.invalidateQueries({ queryKey: ["posts"] }); // সব পোস্ট কোয়েরি রিফ্রেশ করবে
+      // পোস্ট লিস্ট, সিঙ্গেল পোস্ট এবং ব্রেকিং নিউজ সব রিফ্রেশ করবে
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["posts", variables._id] });
       queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 };
 
+/**
+ * পোস্ট ডিলিট করার হুক
+ */
 export const useDeletePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -109,6 +131,9 @@ export const useDeletePost = () => {
   });
 };
 
+/**
+ * ট্রেন্ডিং পোস্ট ফেচ করার হুক
+ */
 export const useFetchTrendingPosts = () => {
   return useQuery({
     queryKey: ["posts", "trending"],
@@ -119,6 +144,9 @@ export const useFetchTrendingPosts = () => {
   });
 };
 
+/**
+ * পোস্ট সার্চ করার হুক (প্যাজিনেশনসহ)
+ */
 export const useSearchPosts = (params: SearchParams) => {
   return useQuery({
     queryKey: ["posts", "search", params],
@@ -137,6 +165,9 @@ export const useSearchPosts = (params: SearchParams) => {
   });
 };
 
+/**
+ * ক্যাটাগরি অনুযায়ী পোস্ট ফেচ করার হুক (প্যাজিনেশনসহ)
+ */
 export const useFetchPostsByCategory = (
   slugOrId: string,
   page: number = 1,
@@ -148,16 +179,19 @@ export const useFetchPostsByCategory = (
       const res = await api.get(`post/filter/${slugOrId}`, {
         params: { page, limit },
       });
-      // ফিক্স: শুধু .data নয়, পুরো res.data রিটার্ন করা হয়েছে যাতে pagination পাওয়া যায়
+      // পুরো res.data রিটার্ন করা হয়েছে যাতে pagination এবং meta ডাটা পাওয়া যায়
       return res.data;
     },
     enabled: !!slugOrId,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 5, // ৫ মিনিট ক্যাশ থাকবে
   });
 };
 
 // --- Breaking News Hooks ---
 
+/**
+ * ব্রেকিং নিউজ লিস্ট ফেচ করার হুক
+ */
 export const useFetchBreakingNews = () => {
   return useQuery({
     queryKey: ["posts", "breaking"],
@@ -165,10 +199,13 @@ export const useFetchBreakingNews = () => {
       const res = await api.get("post/breaking");
       return res.data.data;
     },
-    staleTime: 1000 * 60 * 2,
+    staleTime: 1000 * 60 * 2, // ২ মিনিট ক্যাশ থাকবে
   });
 };
 
+/**
+ * ব্রেকিং নিউজ লিস্ট থেকে রিমুভ করার হুক
+ */
 export const useRemoveFromBreakingNews = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -177,7 +214,7 @@ export const useRemoveFromBreakingNews = () => {
       return res.data;
     },
     onSuccess: () => {
-      // ব্রেকিং নিউজ এবং পোস্ট লিস্ট রিফ্রেশ করা
+      // ব্রেকিং নিউজ এবং জেনারেল পোস্ট লিস্ট রিফ্রেশ করা হবে
       queryClient.invalidateQueries({ queryKey: ["posts", "breaking"] });
       queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
     },
