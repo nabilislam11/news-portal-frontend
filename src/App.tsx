@@ -24,6 +24,8 @@ import ResetPassword from "./dashboard/pages/ResetPassword";
 import { HelmetProvider } from "react-helmet-async";
 import SocialMediaDashboard from "./dashboard/pages/SocialMediaDashboard";
 import ChangePassword from "./components/changepassword/ChangePassword";
+import TermsAndCondition from "./pages/TermsAndCondition";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -97,6 +99,14 @@ const router = createBrowserRouter([
       {
         path: "/single-post/:id",
         element: <BlogSinglePost />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "/terms-and-condition",
+        element: <TermsAndCondition />,
       },
     ],
   },

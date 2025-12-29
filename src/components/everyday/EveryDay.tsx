@@ -33,7 +33,7 @@ const EveryDay = () => {
   };
 
   return (
-    <div className="py-8 bg-gray-50">
+    <div className=" py-4 md:py-6  bg-gray-50">
       <Container>
         <div className="flex flex-col gap-x-2">
           <div className="flex items-center gap-x-2">
@@ -44,7 +44,7 @@ const EveryDay = () => {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row justify-between py-8">
+        <div className="flex flex-col lg:flex-row justify-between  pb-2 pt-4 md:py-8">
           <div className="pb-8 w-full lg:w-[67%]">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {/* ডাটাবেস থেকে আসা posts যদি সরাসরি অ্যারে হয় তবেই ম্যাপ হবে */}

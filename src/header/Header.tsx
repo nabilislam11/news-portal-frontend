@@ -138,7 +138,7 @@ export default function Header() {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden">
+            <div className="md:hidden ">
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="focus:outline-none"

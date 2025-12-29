@@ -1,14 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../axios";
 import type { Post } from "@/validators/post";
-   
 
 export const useFetchAllPosts = () => {
   return useQuery({
     queryKey: ["posts", "all"],
-    queryFn: async () => { 
+    queryFn: async () => {
       const res = await api.get("post");
-      return res.data.data; 
+      return res.data.data;
     },
   });
 };
@@ -186,7 +185,7 @@ export const useFetchPostsByCategory = (
       });
       return res.data.data;
     },
-    enabled: !!slugOrId, 
-    staleTime: 1000 * 60 * 5, 
+    enabled: !!slugOrId,
+    staleTime: 1000 * 60 * 5,
   });
 };

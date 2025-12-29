@@ -7,16 +7,16 @@ import CallNowButton from "../callButton/CallNowButton";
 const MarqueeTag: React.FC = () => {
   const { data } = useFetchAllPosts();
   return (
-    <div className="h-[55px] flex items-center bg-red-600 shadow-md w-full overflow-hidden">
-      <Container className="w-full">
+    <div className="h-[55px] flex items-center bg-red-600 shadow-md w-full overflow-hidden  ">
+      <Container className="w-full  ">
         <div className="flex items-center gap-x-3 w-full overflow-hidden">
           {/* LABEL */}
           <div className="shrink-0">
             <p
               className="text-red-500 text-center bg-white font-primary font-bold 
-              text-[12px] md:text-[14px] py-1 px-3 rounded"
+              text-[12px] md:text-[14px] py-1 px-1 sm:px-3 rounded"
             >
-              Latest News
+              Breaking News
             </p>
           </div>
 
@@ -35,7 +35,7 @@ const MarqueeTag: React.FC = () => {
               ))}
             </Marquee>
           </div>
-          <div className="  ">
+          <div className=" hidden md:block  ">
             {" "}
             <CallNowButton />
           </div>

@@ -8,6 +8,7 @@ import Container from "../components/container/Container";
 import EveryDayCard from "../components/everyday/EveryDayCard";
 import type { CardProps } from "@/types/CardProps";
 import { Button } from "@/components/ui/button";
+import CategoryWorld from "./CategoryWorld";
 
 // Custom Next Arrow
 const NextArrow = ({ onClick }: { onClick?: () => void }) => {
@@ -68,7 +69,7 @@ const FavoriteNews = () => {
   }
 
   return (
-    <div className="bg-gray-100 py-12">
+    <div className="bg-gray-100  py-8 sm:py-12">
       <Container>
         {/* Title Section with Red Accent */}
         <div className="  flex flex-col gap-x-2">
@@ -81,8 +82,8 @@ const FavoriteNews = () => {
         </div>
 
         {/* Slider Section */}
-        <div className="">
-          <div className="slider-container w-[50%]  relative">
+        <div className="flex flex-col md:flex-row justify-between ">
+          <div className=" slider-container w-full md:w-[50%]  relative">
             <Slider {...settings}>
               {Array.isArray(posts) &&
                 posts.map((card: CardProps, i: number) => (
@@ -91,15 +92,17 @@ const FavoriteNews = () => {
                   </div>
                 ))}
             </Slider>
+            {/* View All Button */}
+            <div className="text-center mt-10 mb-10 md:mb-0">
+              <Link to="/category/all">
+                <Button>সব সংবাদ দেখুন</Button>
+              </Link>
+            </div>
           </div>
 
-          {/* View All Button */}
-          <div className="text-center mt-10 mb-10 md:mb-0">
-            <Link to="/category/all">
-              <Button>সব সংবাদ দেখুন</Button>
-            </Link>
+          <div className="  md:w-[45%] ">
+            <CategoryWorld />{" "}
           </div>
-          <div className=""></div>
         </div>
       </Container>
     </div>
