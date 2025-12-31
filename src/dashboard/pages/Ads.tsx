@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import {
   Plus,
   Edit,
@@ -179,7 +179,15 @@ export default function Ads() {
   );
 }
 
-const Stat = ({ label, value, icon }: { label: string; value: number; icon: any }) => (
+const Stat = ({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: number;
+  icon: any;
+}) => (
   <div className="bg-white p-6 rounded-xl shadow border">
     <div className="flex items-center gap-3">
       <div className="bg-red-100 p-3 rounded-lg">{icon}</div>
@@ -285,7 +293,6 @@ const AdModal = ({
           value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
         />
-
         <select
           className="w-full border px-3 py-2 rounded"
           value={form.type}
@@ -294,24 +301,25 @@ const AdModal = ({
           <option value="horizontal">Horizontal</option>
           <option value="square">Square</option>
         </select>
-
         <input
           className="w-full border px-3 py-2 rounded"
           placeholder="Link URL"
           value={form.link}
           onChange={(e) => setForm({ ...form, link: e.target.value })}
         />
-
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (!f) return;
-            setFile(f);
-            setPreview(URL.createObjectURL(f));
-          }}
-        />
+        <div className="bg-red-100 px-4 py-4 font-semibold rounded  ">
+          <input
+            className="cursor-pointer  underline  "
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (!f) return;
+              setFile(f);
+              setPreview(URL.createObjectURL(f));
+            }}
+          />
+        </div>
 
         {preview && (
           <img src={preview} className="w-full h-40 object-cover rounded" />

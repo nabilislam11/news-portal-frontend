@@ -15,15 +15,16 @@ const TermsAndCondition = () => {
             <section>
               <p>
                 We welcome and invite to our{" "}
-                <strong>'Terms of Use' of Kalbela</strong> and its associated
-                websites, its contents, services and applications. Individuals
-                may access the content in several ways using multiple channels
-                including but not limited to www, digital, social platforms, SMS
-                and RSS feeds using multiple devices including but not limited
-                to computers, mobile phones and PDAs. By using our content and
-                services, that is, by reading or using any content, picture or
-                information whatsoever, the users accept our "Terms of Use"
-                including Kalbela's Privacy Policy.
+                <strong>'Terms of Use' of প্রতিদিন জনতার নিউজ</strong> and its
+                associated websites, its contents, services and applications.
+                Individuals may access the content in several ways using
+                multiple channels including but not limited to www, digital,
+                social platforms, SMS and RSS feeds using multiple devices
+                including but not limited to computers, mobile phones and PDAs.
+                By using our content and services, that is, by reading or using
+                any content, picture or information whatsoever, the users accept
+                our "Terms of Use" including প্রতিদিন জনতার নিউজ's Privacy
+                Policy.
               </p>
             </section>
 
@@ -33,13 +34,13 @@ const TermsAndCondition = () => {
                 Intellectual Property Rights
               </h2>
               <p>
-                Kalbela's content, logos, copyright, trademarks, patents,
-                images, text, graphics, logos, domain names, audio, video and
-                other related intellectual property rights or other features of
-                Kalbela brand and name belong to Kalbela or to its licensors.
-                Users cannot claim any rights in and/or our licensor's
-                intellectual property whether for commercial or non-commercial
-                use.
+                প্রতিদিন জনতার নিউজ's content, logos, copyright, trademarks,
+                patents, images, text, graphics, logos, domain names, audio,
+                video and other related intellectual property rights or other
+                features of প্রতিদিন জনতার নিউজ brand and name belong to
+                প্রতিদিন জনতার নিউজ or to its licensors. Users cannot claim any
+                rights in and/or our licensor's intellectual property whether
+                for commercial or non-commercial use.
               </p>
             </section>
 
@@ -49,12 +50,12 @@ const TermsAndCondition = () => {
                 Your use of our services
               </h2>
               <p>
-                Site readers/visitors are required to use Kalbela services only
-                for lawful means and for read-only purposes. The audio and
-                visual elements of the website or application can only be
-                listened to and viewed and nothing beyond. Kalbela encourages
-                its readers to share its content(s) in their social media
-                profile, groups and related communities.
+                Site readers/visitors are required to use প্রতিদিন জনতার নিউজ
+                services only for lawful means and for read-only purposes. The
+                audio and visual elements of the website or application can only
+                be listened to and viewed and nothing beyond. প্রতিদিন জনতার
+                নিউজ encourages its readers to share its content(s) in their
+                social media profile, groups and related communities.
               </p>
             </section>
 
@@ -64,11 +65,12 @@ const TermsAndCondition = () => {
                 Unauthorized and prohibited activities
               </h2>
               <p>
-                The user is specifically required not to associate Kalbela with
-                any political party, racism, sexism or otherwise damage its
-                reputation. The user is also prohibited from submitting Kalbela
-                to damaging any other person or entity by commenting on any post
-                / content that may amount to harassment of others.
+                The user is specifically required not to associate প্রতিদিন
+                জনতার নিউজ with any political party, racism, sexism or otherwise
+                damage its reputation. The user is also prohibited from
+                submitting প্রতিদিন জনতার নিউজ to damaging any other person or
+                entity by commenting on any post / content that may amount to
+                harassment of others.
               </p>
             </section>
 
@@ -79,9 +81,10 @@ const TermsAndCondition = () => {
               </h2>
               <p>
                 Readers/Visitors are required to take their own precautions and
-                protections in this respect as Kalbela does not accept any
-                responsibility for any attacks by virus or malware or any other
-                contamination or by anything which has destructive properties.
+                protections in this respect as প্রতিদিন জনতার নিউজ does not
+                accept any responsibility for any attacks by virus or malware or
+                any other contamination or by anything which has destructive
+                properties.
               </p>
             </section>
 
@@ -91,10 +94,10 @@ const TermsAndCondition = () => {
                 Privacy Policy
               </h2>
               <p>
-                The entire Privacy Policy of Kalbela is an integral part of the
-                "Terms of Use". All clauses in the Privacy Policy are hereby
-                incorporated by reference, except for the clauses which are
-                similar or have the same meaning.
+                The entire Privacy Policy of প্রতিদিন জনতার নিউজ is an integral
+                part of the "Terms of Use". All clauses in the Privacy Policy
+                are hereby incorporated by reference, except for the clauses
+                which are similar or have the same meaning.
               </p>
             </section>
 
@@ -104,11 +107,11 @@ const TermsAndCondition = () => {
                 Modification of Terms of Use
               </h2>
               <p>
-                Kalbela reserves the right to amend, modify, alter, or omit any
-                terms in the "Terms of Use" at any time but the changed policy
-                shall be immediately uploaded or updated in the website. By
-                continuing to use our services after any changes are made, you
-                accept those changes and will be bound by them.
+                প্রতিদিন জনতার নিউজ reserves the right to amend, modify, alter,
+                or omit any terms in the "Terms of Use" at any time but the
+                changed policy shall be immediately uploaded or updated in the
+                website. By continuing to use our services after any changes are
+                made, you accept those changes and will be bound by them.
               </p>
             </section>
 
@@ -118,8 +121,8 @@ const TermsAndCondition = () => {
                 Governing Law
               </h2>
               <p>
-                The laws that govern "Terms of Use" of Kalbela and its
-                relationship with the user is the laws of Bangladesh and any
+                The laws that govern "Terms of Use" of প্রতিদিন জনতার নিউজ and
+                its relationship with the user is the laws of Bangladesh and any
                 dispute regarding the use, retention, disclosure, leakage or
                 dissemination of the information or date can only be raised in
                 court in Bangladesh which shall have exclusive jurisdiction on

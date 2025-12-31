@@ -11,9 +11,10 @@ const PrivacyPolicy = () => {
 
           <div className="space-y-6 text-gray-700 leading-relaxed text-[15px] md:text-[16px]">
             <p>
-              Your privacy is important to us. It is Kalbela's policy to respect
-              your privacy regarding any information we may collect from you
-              across our website, and other sites we own and operate.
+              Your privacy is important to us. It is প্রতিদিন জনতার নিউজ's
+              policy to respect your privacy regarding any information we may
+              collect from you across our website, and other sites we own and
+              operate.
             </p>
 
             <section>
@@ -21,8 +22,8 @@ const PrivacyPolicy = () => {
                 Information we collect
               </h2>
               <p className="mb-2">
-                Kalbela collects information on a user upon the user's access to
-                the website:
+                প্রতিদিন জনতার নিউজ collects information on a user upon the
+                user's access to the website:
               </p>
               <ul className="list-disc ml-6 space-y-1">
                 <li>By registering to the site or Apps.</li>
@@ -53,11 +54,12 @@ const PrivacyPolicy = () => {
                 Do we use 'cookies'?
               </h2>
               <p>
-                Kalbela does not collect any user data based on cookies, nor
-                does it store any sort of user information that may be personal
-                to the user. If a third party associated with the Kalbela
-                website collects user cookies upon your visit to the Kalbela
-                website, Kalbela does not control the use of these cookies.
+                প্রতিদিন জনতার নিউজ does not collect any user data based on
+                cookies, nor does it store any sort of user information that may
+                be personal to the user. If a third party associated with the
+                প্রতিদিন জনতার নিউজ website collects user cookies upon your
+                visit to the প্রতিদিন জনতার নিউজ website, প্রতিদিন জনতার নিউজ
+                does not control the use of these cookies.
               </p>
             </section>
 
@@ -66,10 +68,10 @@ const PrivacyPolicy = () => {
                 Google Analytics
               </h2>
               <p>
-                Kalbela uses Google Analytics to track and report website
-                traffic. Google uses the data collected to track and monitor the
-                use of our Service. This data is shared with other Google
-                services.
+                প্রতিদিন জনতার নিউজ uses Google Analytics to track and report
+                website traffic. Google uses the data collected to track and
+                monitor the use of our Service. This data is shared with other
+                Google services.
               </p>
             </section>
 
@@ -81,7 +83,7 @@ const PrivacyPolicy = () => {
                 If you have any questions about this Privacy Policy, please
                 contact us via Email:
                 <span className="font-bold ml-1 text-red-600">
-                  kalbelanews@gmail.com
+                  info@protidinjonotarnews.com
                 </span>
               </p>
             </section>

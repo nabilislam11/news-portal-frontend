@@ -7,7 +7,7 @@ interface CallButtonProps {
 }
 
 const CallNowButton: React.FC<CallButtonProps> = ({
-  number = "+8801700000000", // আপনার ফিক্সড নাম্বার
+  number = "01628970723", // আপনার ফিক্সড নাম্বার
   label = "সরাসরি কল করুন",
 }) => {
   return (

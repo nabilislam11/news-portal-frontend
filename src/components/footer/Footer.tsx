@@ -5,6 +5,7 @@ import {
   FaFacebookF,
   FaInstagram,
   FaLinkedinIn,
+  FaTiktok,
   FaYoutube,
 } from "react-icons/fa";
 import { IoLogoTwitter } from "react-icons/io5";
@@ -21,6 +22,7 @@ const socialIcons: { [key: string]: React.ReactNode } = {
   youtube: <FaYoutube />,
   twitter: <IoLogoTwitter />,
   instagram: <FaInstagram />,
+  tiktok: <FaTiktok />,
 };
 
 const Footer = () => {
@@ -31,7 +33,7 @@ const Footer = () => {
   useEffect(() => {
     const fetchSocialData = async () => {
       try {
-        const res = await api.get("admin/me");
+        const res = await api.get("admin/public-socials");
         if (res.data?.data?.socialLinks) {
           setSocialLinks(res.data.data.socialLinks);
         }
@@ -127,7 +129,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="flex gap-4 text-xs ">
+        <div className="flex gap-4 text-xs pt-15 md:pt-0 ">
           <Link to="/privacy-policy">
             <p className=" font-primary font-semibold cursor-pointer border-b border-gray-400 text-black text-[16px] ">
               {" "}

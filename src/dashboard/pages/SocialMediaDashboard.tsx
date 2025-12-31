@@ -13,6 +13,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { api } from "@/api/axios";
+import { FaTiktok } from "react-icons/fa";
 
 interface SocialLinks {
   facebook: string;
@@ -20,6 +21,7 @@ interface SocialLinks {
   linkedin: string;
   instagram: string;
   youtube: string;
+  tiktok: string;
 }
 
 export default function SocialMediaDashboard() {
@@ -29,27 +31,25 @@ export default function SocialMediaDashboard() {
     linkedin: "",
     instagram: "",
     youtube: "",
+    tiktok: "",
   });
 
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ১. নোটিফিকেশন স্টেট
   const [status, setStatus] = useState<{
     show: boolean;
     message: string;
     type: "success" | "error";
   }>({ show: false, message: "", type: "success" });
 
-  // ২. নোটিফিকেশন দেখানোর ফাংশন
   const showNotification = (message: string, type: "success" | "error") => {
     setStatus({ show: true, message, type });
     setTimeout(() => {
       setStatus((prev) => ({ ...prev, show: false }));
-    }, 3000); // ৩ সেকেন্ড পর চলে যাবে
+    }, 3000);
   };
 
-  // ৩. ডাটা ফেচ করার useEffect (আপনার দেওয়া লজিক অনুযায়ী)
   useEffect(() => {
     const fetchSocialData = async () => {
       try {
@@ -76,6 +76,8 @@ export default function SocialMediaDashboard() {
         return <Linkedin className="w-5 h-5" />;
       case "youtube":
         return <Youtube className="w-5 h-5" />;
+      case "tiktok":
+        return <FaTiktok className="w-5 h-5" />;
       default:
         return null;
     }
@@ -93,6 +95,8 @@ export default function SocialMediaDashboard() {
         return "bg-blue-700";
       case "youtube":
         return "bg-red-600";
+      case "tiktok":
+        return "bg-black";
       default:
         return "bg-gray-600";
     }
@@ -103,11 +107,9 @@ export default function SocialMediaDashboard() {
     try {
       await api.put("admin/socials", socialLinks);
       setShowModal(false);
-      // ৪. সাকসেস নোটিফিকেশন
       showNotification("Social links updated successfully!", "success");
     } catch (error: any) {
       console.error("Error:", error);
-      // ৫. এরর নোটিফিকেশন
       showNotification(
         error.response?.data?.message || "Failed to update. Please try again.",
         "error"
@@ -125,7 +127,6 @@ export default function SocialMediaDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-rose-100 p-6 relative">
-      {/* ৬. ফ্লোটিং নোটিফিকেশন ডিজাইন */}
       {status.show && (
         <div
           className={`fixed top-5 right-5 z-[100] flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl transition-all duration-500 animate-in fade-in slide-in-from-top-4 ${
@@ -169,7 +170,7 @@ export default function SocialMediaDashboard() {
               </div>
               <div>
                 <p className="text-sm text-gray-600">Total Platforms</p>
-                <p className="text-2xl font-bold text-gray-900">5</p>
+                <p className="text-2xl font-bold text-gray-900">6</p>
               </div>
             </div>
           </div>

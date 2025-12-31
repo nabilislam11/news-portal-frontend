@@ -1,10 +1,7 @@
-import { useMemo } from "react";
 import {
   useDeletePost,
   useFetchAllPosts,
   useUpdatePost,
-  useFetchBreakingNews,
-  useRemoveFromBreakingNews,
 } from "@/api/hooks/post";
 import { EditPost } from "@/components/dashboard/post/EditPost";
 import DataTable from "@/components/dataTable/DataTable";
@@ -22,21 +19,22 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Eye, Trash, Zap } from "lucide-react";
+import { Eye, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router";
 import { PostContent } from "@/components/post/PostContent";
 import Switch from "@/components/switch/Switch";
 
-// Interfaces
 interface Tag {
   _id: string;
   name: string;
 }
+
 interface Category {
   _id: string;
   name: string;
 }
+
 interface PostImage {
   publicId: string;
   url: string;
@@ -51,48 +49,64 @@ interface Post {
   image: PostImage;
   views: number;
   isDraft: boolean;
+  isBreaking?: boolean;
 }
 
 const Posts = () => {
   const { data, isLoading } = useFetchAllPosts();
-  const { data: breakingNewsData } = useFetchBreakingNews();
-
-  const posts = (data as unknown as Post[]) || [];
+  const posts = data as unknown as Post[];
   const deletePost = useDeletePost();
   const updatePost = useUpdatePost();
-  const removeBreaking = useRemoveFromBreakingNews();
 
-  // ব্রেকিং নিউজের স্ট্যাটাস চেক করার জন্য
-  const breakingIds = useMemo(() => {
-    return new Set(breakingNewsData?.map((p: any) => p._id));
-  }, [breakingNewsData]);
+  const handleToggleSwitch = (postId: string, currentValue: boolean) => {
+    const formData = new FormData();
+    formData.append("addToBreaking", (!currentValue).toString());
 
-  const handleToggleSwitch = (postId: string) => {
-    const isCurrentlyBreaking = breakingIds.has(postId);
-
-    if (isCurrentlyBreaking) {
-      removeBreaking.mutate(postId, {
-        onSuccess: () => toast.success("ব্রেকিং নিউজ থেকে সরানো হয়েছে"),
-      });
-    } else {
-      const formData = new FormData();
-      formData.append("addToBreaking", "true"); // আপনার রিকোয়েস্ট অনুযায়ী
-
-      updatePost.mutate(
-        { _id: postId, formData },
-        {
-          onSuccess: () => toast.success("ব্রেকিং নিউজে যুক্ত করা হয়েছে!"),
-        }
-      );
-    }
+    updatePost.mutate(
+      { _id: postId, formData },
+      {
+        onSuccess: () => {
+          toast.success(
+            !currentValue
+              ? "Breaking News চালু করা হয়েছে!"
+              : "Breaking News বন্ধ করা হয়েছে!"
+          );
+        },
+        onError: () => {
+          toast.error("সমস্যা হয়েছে!");
+        },
+      }
+    );
   };
 
   const column = [
     {
       accessorKey: "title",
       header: "Title",
-      cell: ({ row }: any) => (
-        <p className="font-medium line-clamp-1">{row.original.title}</p>
+    },
+    {
+      accessorKey: "category",
+      header: "Category",
+      cell: ({ row }: { row: { original: Post } }) => (
+        <p>{row.original.category?.name || "N/A"}</p>
+      ),
+    },
+    {
+      accessorKey: "tags",
+      header: "Tags",
+      cell: ({ row }: { row: { original: Post } }) => (
+        <div className="flex gap-1 flex-wrap w-40">
+          {row.original.tags?.map((tag: any) => (
+            <Badge key={tag._id}>{tag.name}</Badge>
+          ))}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "content",
+      header: "Content",
+      cell: ({ row }: { row: { original: Post } }) => (
+        <p className="truncate w-40">{row.original.content}</p>
       ),
     },
     {
@@ -101,110 +115,98 @@ const Posts = () => {
       cell: ({ row }: { row: { original: Post } }) => (
         <img
           src={row.original.image?.url}
-          className="w-12 h-8 object-cover rounded shadow-sm"
-          alt="img"
+          className="w-10 h-10 object-cover rounded"
+          alt={row.original.title}
         />
       ),
     },
     {
       accessorKey: "isBreaking",
-      header: "Breaking Ticker",
-      cell: ({ row }: { row: { original: Post } }) => {
-        const isBreaking = breakingIds.has(row.original._id);
-        return (
-          <div className="flex items-center gap-3">
-            <Switch
-              checked={isBreaking}
-              onToggle={() => handleToggleSwitch(row.original._id)}
-            />
-            {isBreaking && (
-              <Badge className="bg-red-600 animate-pulse flex gap-1 items-center">
-                <Zap size={10} fill="white" /> LIVE
-              </Badge>
-            )}
-          </div>
-        );
-      },
+      header: "Breaking",
+      cell: ({ row }: { row: { original: Post } }) => (
+        <div className="flex items-center gap-2">
+          <Switch
+            checked={row.original.isBreaking || false}
+            onToggle={() =>
+              handleToggleSwitch(
+                row.original._id,
+                row.original.isBreaking || false
+              )
+            }
+          />
+          {row.original.isBreaking && (
+            <Badge variant="destructive" className="text-xs">
+              Breaking
+            </Badge>
+          )}
+        </div>
+      ),
     },
     {
       header: "Actions",
       cell: ({ row }: { row: { original: Post } }) => (
-        <div className="flex items-center gap-2">
-          {/* পূর্ণাঙ্গ View Dialog */}
+        <div className="flex justify-center text-center items-center gap-2 ">
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm">
+              <Button className="bg-secondary" size={"sm"}>
                 <Eye size={16} />
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl bg-white text-black p-6">
+            <DialogContent className="max-h-screen overflow-y-scroll">
               <img
                 src={row.original.image?.url}
-                className="w-full rounded-lg mb-4 object-cover"
-                alt="cover"
+                alt={row.original.title}
+                className="w-full rounded-lg"
               />
-
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold leading-tight flex-1 mr-4">
-                  {row.original.title}
-                </h2>
-                <Badge className="shrink-0">
-                  {row.original.category?.name || "No Category"}
-                </Badge>
+              <h3 className="text-sm sm:text-base font-semibold leading-snug text-gray-900 line-clamp-2 mb-2 group-hover:text-red-500 transition-colors">
+                {row.original.title}
+              </h3>
+              <PostContent content={row.original.content} />
+              <Badge>{row.original.category?.name || "Uncategorized"}</Badge>
+              <div className="flex gap-1 flex-wrap mt-2">
+                {row.original.tags?.map((tag) => (
+                  <Badge variant="outline" key={tag._id}>
+                    {tag.name}
+                  </Badge>
+                ))}
               </div>
-
-              <div className="prose prose-sm max-w-none mb-6">
-                <PostContent content={row.original.content} />
-              </div>
-
-              <div className="border-t pt-4 mt-4">
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {row.original.tags?.map((tag) => (
-                    <Badge key={tag._id} variant="secondary">
-                      #{tag.name}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="flex justify-between text-sm text-gray-500 font-medium">
-                  <span>Views: {row.original.views || 0}</span>
-                  {breakingIds.has(row.original._id) && (
-                    <span className="text-red-600 flex items-center gap-1 font-bold">
-                      <Zap size={14} fill="currentColor" /> Breaking News
-                    </span>
-                  )}
-                </div>
-              </div>
+              <span className="text-sm text-gray-500 block mt-2">
+                Views: {row.original.views || 0}
+              </span>
+              {row.original.isBreaking && (
+                <Badge variant="destructive">Breaking News</Badge>
+              )}
             </DialogContent>
           </Dialog>
 
-          <EditPost data={row.original as any} />
+          <EditPost data={row.original as Post} />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="sm">
+              <Button variant={"destructive"} size={"sm"}>
                 <Trash size={16} />
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="bg-white">
+            <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-black">
-                  আপনি কি নিশ্চিত?
-                </AlertDialogTitle>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  এই পোস্টটি স্থায়ীভাবে মুছে যাবে।
+                  This action cannot be undone. This will permanently delete
+                  this Post.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>বাতিল</AlertDialogCancel>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  className="bg-red-600"
-                  onClick={() =>
+                  onClick={() => {
                     deletePost.mutate(row.original._id, {
-                      onSuccess: () => toast.success("মুছে ফেলা হয়েছে"),
-                    })
-                  }
+                      onSuccess: () => {
+                        toast.success("Post deleted successfully!");
+                      },
+                    });
+                  }}
                 >
-                  মুছে ফেলুন
+                  Continue
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -215,25 +217,18 @@ const Posts = () => {
   ];
 
   return (
-    <div className="p-2">
-      <div className="flex justify-between mb-8 items-center bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-        <div>
-          <h2 className="font-extrabold text-2xl text-gray-800">
-            Post Management
-          </h2>
-          <p className="text-gray-500 text-sm">
-            নিউজগুলো এখান থেকে ম্যানেজ করুন
-          </p>
-        </div>
-        <Link to="/dashboard/add-post">
-          <Button className="bg-red-600 hover:bg-red-700">Add New Post</Button>
+    <div>
+      <div className="flex justify-between mb-5 items-center ">
+        <h2 className="font-bold text-2xl">Post</h2>
+        <Link to={"/dashboard/add-post"}>
+          <Button>Add Post</Button>
         </Link>
       </div>
-
       <DataTable
-        loading={isLoading || updatePost.isPending || removeBreaking.isPending}
+        className="bg-gradient-to-br from-red-50 to-rose-100 "
+        loading={isLoading || updatePost.isPending}
         search="title"
-        data={posts}
+        data={posts || []}
         columns={column}
       />
     </div>
