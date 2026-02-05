@@ -1,7 +1,6 @@
 import { Link } from "react-router";
 import CategoriesCard from "../categoriescard/CategoriesCard";
 import Container from "../container/Container";
-import TagCard from "../tag/tagcard/TagCard";
 import { Button } from "../ui/button";
 import NewsCard from "./NewsCard";
 import { useFetchAllCategories } from "@/api/hooks/category";
@@ -15,10 +14,10 @@ const NewsItems = () => {
   const { data: posts } = useFetchAllPosts();
 
   console.log(tags, "tags");
-  
+
   return (
     <div>
-      <div className=" bg-gray-50  pb-15">
+      <div className=" py-8 g-gray-50">
         <Container>
           {/* Header */}
           <div className="mb-8">
@@ -32,7 +31,7 @@ const NewsItems = () => {
             {/* News Cards */}
             <div className="w-full lg:w-[67%]">
               <div className="space-y-6">
-                {posts?.slice(0, 6).map((item :CardProps, index: number) => (
+                {posts?.slice(0, 4).map((item: CardProps, index: number) => (
                   <NewsCard key={index} {...item} />
                 ))}
               </div>
@@ -47,9 +46,9 @@ const NewsItems = () => {
                 <div className="">
                   <CategoriesCard categories={categories || []} />
                 </div>
-                <div className="">
+                {/* <div className="">
                   <TagCard tags={tags || []} />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

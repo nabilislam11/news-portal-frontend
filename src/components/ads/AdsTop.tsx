@@ -1,13 +1,13 @@
 import Container from "../container/Container";
 import { useRandomAd } from "./RandomAds";
 
-const Ads = () => {
+const AdsTop = () => {
   const ad = useRandomAd("BANNER"); // অথবা আপনার ব্যানারের ক্যাটাগরি অনুযায়ী টাইপ দিন
 
   if (!ad) return null;
 
   return (
-    <div className="py-6 ">
+    <div className="pb-4 pt-11 md:py-6">
       <Container>
         {/* ব্যানার কন্টেইনার - চিকন এবং চওড়া (Horizontal) */}
         <div className="relative w-full group overflow-hidden rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300 bg-gray-50">
@@ -50,4 +50,4 @@ const Ads = () => {
   );
 };
 
-export default Ads;
+export default AdsTop;

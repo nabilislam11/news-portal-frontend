@@ -20,8 +20,8 @@ import Logo from "./logo/Logo";
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Admin",
+    email: "protidinjonotarnews.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
@@ -53,6 +53,11 @@ const data = {
     {
       title: "Ads",
       url: "/dashboard/ads",
+      icon: IconDashboard,
+    },
+    {
+      title: "Social Media",
+      url: "socialmedia",
       icon: IconDashboard,
     },
   ],

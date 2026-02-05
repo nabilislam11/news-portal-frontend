@@ -1,230 +1,155 @@
-import Container from "../components/container/Container";
+import { useMemo } from "react";
 import { Link, useParams } from "react-router";
+import Container from "../components/container/Container";
 import CategoriesCard from "../components/categoriescard/CategoriesCard";
 import {
   useFetchAllCategories,
   useFetchCategoryById,
 } from "@/api/hooks/category";
-import { useFetchAllTags } from "@/api/hooks/tag";
 import { useFetchAllPosts, useFetchPostsByCategory } from "@/api/hooks/post";
-import TagCard from "@/components/tag/tagcard/TagCard";
 import DateFormatter from "@/components/DateFormatter";
 import { PostContent } from "@/components/post/PostContent";
 import type { CardProps } from "@/types/CardProps";
+import RecentPost from "@/components/recentpost/RecentPost";
+import Subcribtion from "@/components/subscribtion/Subcribtion";
+import SquareAds from "@/components/ads/SquareAds";
+import { Badge } from "@/components/ui/badge";
 
 const CategoryPage = () => {
   const { id } = useParams();
-  const { data: TagsList } = useFetchAllTags();
-  const { data: CategoriesList } = useFetchAllCategories();
-  const { data: posts } = useFetchAllPosts();
-  const { data: categoryPosts } = useFetchPostsByCategory(id as string);
-  const { data: category } = useFetchCategoryById(id as string);
-  console.log(categoryPosts);
 
-  const displayPosts = id === "all" ? posts : categoryPosts;
+  // ১. ডাটা ফেচিং
+  const { data: categoriesList } = useFetchAllCategories();
+  const { data: allPosts, isLoading: isAllLoading } = useFetchAllPosts();
+  const { data: categoryResponse, isLoading: isCatLoading } =
+    useFetchPostsByCategory(id as string);
+  const { data: categoryInfo } = useFetchCategoryById(id as string);
+
+  /**
+   * ২. ডাটা নরমালাইজেশন (সবচেয়ে গুরুত্বপূর্ণ অংশ)
+   * আপনার নতুন হুক অনুযায়ী:
+   * 'all' হলে সরাসরি অ্যারে আসে।
+   * নির্দিষ্ট আইডি হলে একটি অবজেক্ট আসে যার ভেতর .data তে অ্যারে থাকে।
+   */
+  const finalPosts = useMemo(() => {
+    if (id === "all") {
+      return Array.isArray(allPosts) ? allPosts : [];
+    }
+    // আপনার আপডেট করা হুক অনুযায়ী res.data রিটার্ন হচ্ছে, তাই .data চেক করতে হবে
+    return Array.isArray(categoryResponse?.data) ? categoryResponse.data : [];
+  }, [id, allPosts, categoryResponse]);
+
+  const isLoading = id === "all" ? isAllLoading : isCatLoading;
+
+  // ৩. শিরোনাম লজিক
+  const categoryName = useMemo(() => {
+    if (id === "all") return "All News";
+    return categoryResponse?.meta?.filterName || categoryInfo?.name || "News";
+  }, [id, categoryResponse, categoryInfo]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-pink-600"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-gray-50 pt-35 min-h-screen">
-      {/* Main Container */}
+    <div className="bg-gray-50 pt-32 md:pt-40 min-h-screen">
       <Container>
         {/* Category Header */}
-        <div className="text-center mb-8 bg-white py-6">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Category :{" "}
-            <span className="text-pink-600">
-              {id == "all" ? "All" : category?.name || ""}
-            </span>
+        <div className="text-center mb-10 bg-white py-8 rounded-lg shadow-sm border-b-4 border-pink-600">
+          <h1 className="text-2xl md:text-4xl font-extrabold text-gray-800 uppercase tracking-tight">
+            Category : <span className="text-pink-600">{categoryName}</span>
           </h1>
+          <p className="text-gray-500 mt-2">
+            Showing {finalPosts.length} posts found in this section
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content Area */}
           <div className="lg:col-span-2">
-            {/* Articles */}
-            {Array.isArray(displayPosts)
-              ? displayPosts.map((article: CardProps) => (
+            {finalPosts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {finalPosts.map((article: CardProps) => (
                   <div
                     key={article._id}
-                    className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"
+                    className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full"
                   >
-                    <img
-                      src={article?.image?.url}
-                      alt={article.title}
-                      className="w-full h-64 object-cover"
-                    />
-                    <div className="p-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        {article.category && (
-                          <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
-                            {article.category.name}
-                          </span>
-                        )}
-                      </div>
-                      <Link to={`/single-post/${article._id}`}>
-                        <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
-                          {article.title}
-                        </h2>
-                      </Link>
-
-                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                        <span className="flex items-center gap-1">
-                          <span className="text-pink-600">👤</span> Author
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <span className="text-pink-600">📅</span>{" "}
-                          <DateFormatter date={article.createdAt} />
-                        </span>
-                      </div>
-
-                      <p className="text-gray-700 mb-4 leading-relaxed line-clamp-2">
-                        <PostContent content={article.content} />
-                      </p>
-                      <Link to={`/single-post/${article._id}`}>
-                        <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
-                          Continue Reading →
-                        </button>
-                      </Link>
+                    {/* Image Section */}
+                    <div className="relative overflow-hidden group">
+                      <img
+                        src={article?.image?.url}
+                        alt={article.title}
+                        className="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-500"
+                      />
+                      {article.category && (
+                        <Badge className="absolute top-4 left-4 bg-red-500 text-white hover:bg-red-500 border-none">
+                          {article.category.name}
+                        </Badge>
+                      )}
                     </div>
-                  </div>
-                ))
-              : displayPosts?.posts?.map((article: CardProps) => (
-                  <div
-                    key={article._id}
-                    className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"
-                  >
-                    <img
-                      src={article?.image?.url}
-                      alt={article.title}
-                      className="w-full h-64 object-cover"
-                    />
-                    <div className="p-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        {article.category && (
-                          <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
-                            {article.category.name}
-                          </span>
-                        )}
+
+                    {/* Content Section */}
+                    <div className="p-5 flex flex-col flex-grow">
+                      <div className="flex items-center gap-4 text-[11px] text-gray-500 mb-3 uppercase tracking-wider font-semibold">
+                        <span className="flex items-center gap-1">
+                          <span className="text-pink-600 text-sm">📅</span>
+                          <DateFormatter date={article.createdAt} />
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="text-pink-600 text-sm">👤</span>{" "}
+                          Admin
+                        </span>
                       </div>
+
                       <Link to={`/single-post/${article._id}`}>
-                        <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
+                        <h2 className="text-xl font-bold text-gray-800 mb-3 hover:text-pink-600 transition-colors line-clamp-2 leading-snug">
                           {article.title}
                         </h2>
                       </Link>
 
-                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                        <span className="flex items-center gap-1">
-                          <span className="text-pink-600">👤</span> Author
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <span className="text-pink-600">📅</span>{" "}
-                          <DateFormatter date={article.createdAt} />
-                        </span>
+                      <div className="text-gray-600 text-sm mb-5 line-clamp-3 flex-grow leading-relaxed">
+                        <PostContent content={article.content} />
                       </div>
 
-                      <p className="text-gray-700 mb-4 leading-relaxed line-clamp-2">
-                        <PostContent content={article.content} />
-                      </p>
-                      <Link to={`/single-post/${article._id}`}>
-                        <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
-                          Continue Reading →
-                        </button>
+                      <Link
+                        to={`/single-post/${article._id}`}
+                        className="mt-auto inline-flex items-center text-red-500 font-bold text-sm hover:gap-2 transition-all"
+                      >
+                        CONTINUE READING <span className="ml-1 text-lg">→</span>
                       </Link>
                     </div>
                   </div>
                 ))}
+              </div>
+            ) : (
+              <div className="bg-white rounded-lg p-20 text-center shadow-sm">
+                <div className="text-5xl mb-4">📂</div>
+                <h2 className="text-xl font-bold text-gray-400 italic">
+                  No posts found in this category yet.
+                </h2>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1">
-            {/* Search Box */}
-            <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-600"
-                />
-                <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-800 text-white px-4 py-1 rounded">
-                  Search
-                </button>
+          <div className="lg:col-span-1 space-y-8">
+            <RecentPost />
+
+            <div className="sticky top-24 space-y-8">
+              <CategoriesCard categories={categoriesList || []} />
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4 border-b-2 border-pink-600 pb-2">
+                  Newsletter
+                </h3>
+                <Subcribtion />
               </div>
-            </div>
 
-            {/* Recent Posts */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
-                Recent Posts
-              </h3>
-              <ul className="space-y-3">
-                {posts?.map((post: CardProps, index: number) => (
-                  <li
-                    key={index}
-                    className="text-gray-700 hover:text-pink-600 cursor-pointer transition-colors text-sm"
-                  >
-                    {post.title}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Recent Comments */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
-                Recent Comments
-              </h3>
-              <p className="text-gray-600 text-sm">No comments to show.</p>
-            </div>
-
-            {/* Categories */}
-            <div className="">
-              <CategoriesCard categories={CategoriesList || []} />
-            </div>
-
-            {/* Recent Article */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
-                Recent Article
-              </h3>
-              <div className="space-y-4">
-                <div className="flex gap-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100&h=80&fit=crop"
-                    alt="Article"
-                    className="w-24 h-20 object-cover rounded"
-                  />
-                  <div>
-                    <p className="text-sm text-gray-800 hover:text-pink-600 cursor-pointer font-semibold">
-                      বাংলা ভাষিকদের বাংলাদেশ ও পশ্চিমবঙ্গের রাজসিংহ
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      January 5, 2025
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Newsletter */}
-            <div className="bg-gray-800 rounded-lg shadow-sm p-6 mb-6 text-white">
-              <h3 className="text-xl font-bold mb-2">
-                Subscribe To Our Newsletter
-              </h3>
-              <p className="text-sm text-gray-300 mb-4">
-                আমাদের নিউজলেটার সাবস্ক্রাইব করুন এবং নতুন পোস্টের আপডেট পান।
-              </p>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full px-4 py-2 rounded mb-3 text-gray-800"
-              />
-              <button className="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded font-semibold transition-colors">
-                Subscribe Now
-              </button>
-            </div>
-
-            {/* Tags Cloud */}
-            <div className="">
-              <TagCard tags={TagsList || []} />
+              <SquareAds />
             </div>
           </div>
         </div>

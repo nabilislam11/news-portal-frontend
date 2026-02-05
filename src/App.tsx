@@ -5,6 +5,8 @@ import RootLayout from "./pages/RootLayout";
 import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
 import DashRootLayout from "./dashboard/layout/DashRootLayout";
+import AuthSimpleLayout from "./dashboard/layout/AuthSimpleLayout";
+import ProtectedRoute from "./components/dashboard/ProtectedRoute";
 import DashHome from "./dashboard/pages/DashHome";
 import BlogSinglePost from "./pages/BlogSinglePost";
 import "slick-carousel/slick/slick.css";
@@ -14,17 +16,71 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Categories from "./dashboard/pages/Categories";
 import Posts from "./dashboard/pages/Posts";
 import NavMenu from "./dashboard/pages/NavMenu";
-import { AddPost } from "./dashboard/pages/AddPost";
 import Subscription from "./dashboard/pages/Subscription";
 import Ads from "./dashboard/pages/Ads";
+import AddPost from "./dashboard/pages/AddPost";
+import EmailVerification from "./dashboard/pages/EmailVerification";
+import ResetPassword from "./dashboard/pages/ResetPassword";
+import { HelmetProvider } from "react-helmet-async";
+import SocialMediaDashboard from "./dashboard/pages/SocialMediaDashboard";
+import ChangePassword from "./components/changepassword/ChangePassword";
+import TermsAndCondition from "./pages/TermsAndCondition";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CategoriesAll from "./pages/CategoriseAll";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
+  /* ----------------------------------------------------------------
+     1. PUBLIC ROUTES (Login, Verify, Reset)
+     - Wrapped in AuthSimpleLayout for the white box design
+  ---------------------------------------------------------------- */
   {
-    path: "/login",
-    element: <Login />,
+    element: <AuthSimpleLayout />,
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "verify-otp",
+        element: <EmailVerification />,
+      },
+      {
+        path: "reset-password",
+        element: <ResetPassword />,
+      },
+    ],
   },
 
+  /* ----------------------------------------------------------------
+     2. PROTECTED ROUTES (Dashboard)
+     - Wrapped in ProtectedRoute to blocking access
+  ---------------------------------------------------------------- */
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/dashboard",
+        element: <DashRootLayout />,
+        children: [
+          { index: true, element: <DashHome /> },
+          { path: "categories", element: <Categories /> },
+          { path: "posts", element: <Posts /> },
+          { path: "nav", element: <NavMenu /> },
+          { path: "add-post", element: <AddPost /> },
+          { path: "subscription", element: <Subscription /> },
+          { path: "ads", element: <Ads /> },
+          { path: "socialmedia", element: <SocialMediaDashboard /> },
+          { path: "change-password", element: <ChangePassword /> },
+        ],
+      },
+    ],
+  },
+  /* ----------------------------------------------------------------
+     3. ROOT REDIRECT
+     - Redirects root "/" to "/dashboard"
+     - The ProtectedRoute will then kick them to /login if needed
+  ---------------------------------------------------------------- */
   {
     path: "/",
     element: <RootLayout />,
@@ -45,19 +101,18 @@ const router = createBrowserRouter([
         path: "/single-post/:id",
         element: <BlogSinglePost />,
       },
-    ],
-  },
-  {
-    path: "/dashboard",
-    element: <DashRootLayout />,
-    children: [
-      { index: true, element: <DashHome /> },
-      { path: "/dashboard/categories", element: <Categories /> },
-      { path: "/dashboard/posts", element: <Posts /> },
-      { path: "/dashboard/nav", element: <NavMenu /> },
-      { path: "/dashboard/add-post", element: <AddPost /> },
-      { path: "/dashboard/subscription", element: <Subscription /> },
-      { path: "/dashboard/ads", element: <Ads /> },
+      {
+        path: "/categories-all",
+        element: <CategoriesAll />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "/terms-and-condition",
+        element: <TermsAndCondition />,
+      },
     ],
   },
 ]);
@@ -65,10 +120,14 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
-        <RouterProvider router={router} />
-      </QueryClientProvider>
+      {/* ২. HelmetProvider দিয়ে সবকিছু মুড়িয়ে দিন */}
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          {/* ৩. এটি RouterProvider-এর মাধ্যমে আপনার সব পেজে এসইও ডাটা পাঠাবে */}
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </HelmetProvider>
     </>
   );
 }
