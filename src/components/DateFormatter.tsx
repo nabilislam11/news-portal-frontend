@@ -2,13 +2,13 @@ import React from "react";
 
 interface DateFormatterProps {
   date?: string | Date;
-  locale?: string; 
-  options?: Intl.DateTimeFormatOptions; 
+  locale?: string;
+  options?: Intl.DateTimeFormatOptions;
 }
 
 const DateFormatter: React.FC<DateFormatterProps> = ({
   date,
-  locale = "en-US",
+  locale = "bn-BD",
   options,
 }) => {
   const dateObj = typeof date === "string" ? new Date(date) : date;
@@ -25,7 +25,7 @@ const DateFormatter: React.FC<DateFormatterProps> = ({
 
   const formattedDate = dateObj?.toLocaleString(
     locale,
-    options || defaultOptions
+    options || defaultOptions,
   );
 
   return <span>{formattedDate}</span>;

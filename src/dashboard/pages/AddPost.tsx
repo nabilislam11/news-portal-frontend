@@ -51,7 +51,7 @@ export default function AddPost() {
       height: 400,
       placeholder: "Start typing...",
     }),
-    []
+    [],
   );
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,7 +95,7 @@ export default function AddPost() {
         if (error && (error as AxiosError).response) {
           const axiosError = error as AxiosError<{ message: string }>;
           toast.error(
-            axiosError.response?.data?.message || "Something went wrong!"
+            axiosError.response?.data?.message || "Something went wrong!",
           );
         } else {
           toast.error("Something went wrong!");
@@ -174,7 +174,7 @@ export default function AddPost() {
         </div>
 
         {/* Tags */}
-        <div className="grid gap-3">
+        {/* <div className="grid gap-3">
           <Label htmlFor="tags">Tags (Comma separated)</Label>
           <Input
             id="tags"
@@ -194,7 +194,7 @@ export default function AddPost() {
               {form.formState.errors.tags.message as string}
             </span>
           )}
-        </div>
+        </div> */}
 
         {/* Content */}
         <div className="grid gap-3">
