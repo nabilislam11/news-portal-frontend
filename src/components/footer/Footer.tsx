@@ -48,9 +48,6 @@ const Footer = () => {
     <footer className="bg-gray-100 pt-12 pb-6 border-t border-gray-200">
       <Container>
         {/* উপরের ইনফো সেকশন */}
-        <div className="mb-10">
-          <FooterInfo />
-        </div>
 
         {/* মেইন ফুটার গ্রিড */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 px-4 md:px-0">
@@ -106,7 +103,7 @@ const Footer = () => {
                           {platform}
                         </span>
                       </a>
-                    )
+                    ),
                 )}
             </div>
           </div>
@@ -128,6 +125,9 @@ const Footer = () => {
               ))}
             </div>
           </div>
+        </div>
+        <div className="mt-10">
+          <FooterInfo />
         </div>
         <div className="flex gap-4 text-xs pt-15 md:pt-0 ">
           <Link to="/privacy-policy">

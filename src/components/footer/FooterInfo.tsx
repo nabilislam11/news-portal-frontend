@@ -19,24 +19,35 @@ const FooterInfo = () => {
 
         {/* ডান পাশ: যোগাযোগ এবং বিভাগসমূহ */}
         <div className="text-gray-800 text-[14px] space-y-1.5 leading-relaxed">
-          <p>
-            <span className="font-bold">ফোন :</span> ০১৬২৮-৯৭০৭২৩, ০১৭৪২-৯৩৯৭৪৪
-            ।
+          <p className="font-bold font-secondary text-[15px] ">
+            <span className="font-bold font-secondary text-[15px]">ফোন :</span>{" "}
+            ০১৬২৮-৯৭০৭২৩, ০১৭৪২-৯৩৯৭৪৪ ।
           </p>
-          <p>
-            <span className="font-bold">হোয়াটসঅ্যাপ:</span> +৮৮০ ১৬২৮-৯৭০৭২৩ ।
+          <p className="font-medium   font-secondary text-[15px]">
+            <span className="font-bold font-secondary text-[15px]">
+              হোয়াটসঅ্যাপ:
+            </span>{" "}
+            +৮৮০ ১৬২৮-৯৭০৭২৩ ।
           </p>
-          <p>
-            <span className="font-bold">ই-মেইল:</span>{" "}
+          <p className="font-medium   font-secondary text-[15px]">
+            <span className="font-bold font-secondary text-[15px]">
+              ই-মেইল:
+            </span>{" "}
             Info@protidinjonotarnews.com
           </p>
-          <p>
-            <span className="font-bold">বিজ্ঞাপন বিভাগ: ফোন:</span> ০১৬২৮-৯৭০৭২৩
-            । <span className="font-bold">ই-মেইল:</span>{" "}
+          <p className="font-medium    font-secondary text-[15px]">
+            <span className="font-bold font-secondary text-[15px]">
+              বিজ্ঞাপন বিভাগ: ফোন:
+            </span>{" "}
+            ০১৬২৮-৯৭০৭২৩ ।{" "}
+            <span className="font-bold    font-secondary text-[15px]">
+              ই-মেইল:
+            </span>{" "}
             info@protidinjonotarnews.com
           </p>
-          <p>
-            <span className="font-bold">সার্কুলেশন : ফোন:</span> ০১৬২৮-৯৭০৭২৩ ।
+          <p className="font-medium    font-secondary text-[15px]">
+            <span className="font-bold font-secondary text-[15px]">ফোন:</span>{" "}
+            ০১৬২৮-৯৭০৭২৩ ।
           </p>
           <p className="pt-2 font-medium">
             প্রতিদিন জনতার মিডিয়া লিমিটেডের একটি প্রকাশনা।

@@ -1,13 +1,5 @@
 import { useEffect } from "react";
-import {
-  User,
-  Calendar,
-  Clock,
-  Eye,
-  Facebook,
-  Twitter,
-  Search,
-} from "lucide-react";
+import { User, Calendar, Clock, Eye, Facebook, Twitter } from "lucide-react";
 import { Link, useParams } from "react-router";
 import { useFetchPostById, useFetchPostsByCategory } from "@/api/hooks/post";
 import DateFormatter from "@/components/DateFormatter";
@@ -16,6 +8,7 @@ import type { CardProps } from "@/types/CardProps";
 import RecentPost from "@/components/recentpost/RecentPost";
 import SquareAds from "@/components/ads/SquareAds";
 import { Helmet } from "react-helmet-async"; // Helmet এখানে ইমপোর্ট করা আছে
+import { IoLogoWhatsapp } from "react-icons/io5";
 
 // --- Types ---
 interface BlogPost {
@@ -158,9 +151,10 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
         <div dangerouslySetInnerHTML={{ __html: post.content || "" }} />
       </div>
 
-      <div className="flex flex-wrap items-center gap-4 mt-8 mb-8 border-t border-b border-gray-100 py-4">
+      <div className="flex flex-wrap items-center  gap-4 mt-8 mb-8 border-t border-b border-gray-100 py-4">
         <div className="flex items-center gap-2 flex-1">
-          <span className="font-bold text-gray-900">Tags:</span>
+          {/* <span className="font-bold text-gray-900">Tags:</span> */}
+          <span className="font-bold text-gray-900">Share</span>
           <div className="flex wrap gap-2">
             {post.tags?.map((tag) => (
               <span
@@ -190,7 +184,7 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
             onClick={handleWhatsAppShare}
             className="w-9 h-9 rounded-full bg-[#25D366] flex items-center justify-center"
           >
-            <Search size={20} className="text-white" />
+            <IoLogoWhatsapp size={20} className="text-white" />
           </button>
           <button
             onClick={handleCopyLink}
