@@ -72,29 +72,29 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
   const handleFacebookShare = () => {
     window.open(
       `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        shareUrl
+        shareUrl,
       )}`,
       "fb-share",
-      "width=600,height=400"
+      "width=600,height=400",
     );
   };
 
   const handleTwitterShare = () => {
     window.open(
       `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-        shareUrl
+        shareUrl,
       )}&text=${encodeURIComponent(shareTitle)}`,
       "tw-share",
-      "width=600,height=400"
+      "width=600,height=400",
     );
   };
 
   const handleWhatsAppShare = () => {
     window.open(
       `https://api.whatsapp.com/send?text=${encodeURIComponent(
-        shareTitle + " - " + shareUrl
+        shareTitle + " - " + shareUrl,
       )}`,
-      "_blank"
+      "_blank",
     );
   };
 
@@ -117,7 +117,7 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
 
   return (
     <article className="w-full">
-      <div className="flex flex-wrap items-center gap-2 mb-4 text-xs md:text-sm text-gray-500 font-medium">
+      <div className="flex flex-wrap pt-7 sm:pt-0 items-center gap-2 mb-4 text-xs md:text-sm text-gray-500 font-medium">
         <span className="bg-yellow-400 text-black px-2 py-0.5 rounded-sm font-bold uppercase text-[10px] md:text-xs">
           {post.category?.name || "Uncategorized"}
         </span>

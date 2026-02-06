@@ -32,7 +32,9 @@ const NewsItems = () => {
             <div className="w-full lg:w-[67%]">
               <div className="space-y-6">
                 {posts?.slice(0, 4).map((item: CardProps, index: number) => (
-                  <NewsCard key={index} {...item} />
+                  <Link to={`single-post/${item._id}`}>
+                    <NewsCard key={index} {...item} />
+                  </Link>
                 ))}
               </div>
               <div className="text-center mt-10 mb-10 md:mb-0">
