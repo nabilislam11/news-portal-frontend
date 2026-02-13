@@ -57,7 +57,7 @@ const data = {
     },
     {
       title: "Social Media",
-      url: "socialmedia",
+      url: "/dashboard/socialmedia",
       icon: IconDashboard,
     },
   ],
