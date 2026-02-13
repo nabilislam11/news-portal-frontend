@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   useDeletePost,
-  useFetchAllPosts,
+  useFetchAllPostsPaginated,
   useUpdatePost,
   useFetchBreakingNews,
   useRemoveFromBreakingNews,
@@ -54,15 +54,29 @@ interface Post {
 }
 
 const Posts = () => {
-  const { data, isLoading } = useFetchAllPosts();
+  // --- Pagination State ---
+  const [{ pageIndex, pageSize }, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  // --- Data Fetching ---
+  const { data, isLoading } = useFetchAllPostsPaginated({
+    page: pageIndex + 1, // API is 1-based, table is 0-based
+    limit: pageSize,
+  });
+
   const { data: breakingNewsData } = useFetchBreakingNews();
 
-  const posts = (data as unknown as Post[]) || [];
+  // --- Memoized Data & Pagination Values ---
+  const posts = useMemo(() => data?.data || [], [data]);
+  const totalRows = useMemo(() => data?.pagination?.totalPosts || 0, [data]);
+  const pageCount = useMemo(() => data?.pagination?.totalPages || 0, [data]);
+
   const deletePost = useDeletePost();
   const updatePost = useUpdatePost();
   const removeBreaking = useRemoveFromBreakingNews();
 
-  // ব্রেকিং নিউজের স্ট্যাটাস চেক করার জন্য
   const breakingIds = useMemo(() => {
     return new Set(breakingNewsData?.map((p: any) => p._id));
   }, [breakingNewsData]);
@@ -76,13 +90,13 @@ const Posts = () => {
       });
     } else {
       const formData = new FormData();
-      formData.append("addToBreaking", "true"); // আপনার রিকোয়েস্ট অনুযায়ী
+      formData.append("addToBreaking", "true");
 
       updatePost.mutate(
         { _id: postId, formData },
         {
           onSuccess: () => toast.success("ব্রেকিং নিউজে যুক্ত করা হয়েছে!"),
-        }
+        },
       );
     }
   };
@@ -130,7 +144,6 @@ const Posts = () => {
       header: "Actions",
       cell: ({ row }: { row: { original: Post } }) => (
         <div className="flex items-center gap-2">
-          {/* পূর্ণাঙ্গ View Dialog */}
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">
@@ -235,6 +248,11 @@ const Posts = () => {
         search="title"
         data={posts}
         columns={column}
+        // --- Server-Side Pagination Props ---
+        pageCount={pageCount}
+        pagination={{ pageIndex, pageSize }}
+        onPaginationChange={setPagination}
+        totalRows={totalRows}
       />
     </div>
   );

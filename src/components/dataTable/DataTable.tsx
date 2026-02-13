@@ -63,6 +63,15 @@ interface DataTableProps<TData, TValue> {
   loading?: boolean;
   emptyMessage?: string;
   className?: string;
+
+  // --- Server-Side Pagination Props (Optional) ---
+  pageCount?: number;
+  pagination?: {
+    pageIndex: number;
+    pageSize: number;
+  };
+  onPaginationChange?: (pagination: { pageIndex: number; pageSize: number }) => void;
+  totalRows?: number;
 }
  
 export default function DataTable<TData, TValue>({
@@ -79,6 +88,12 @@ export default function DataTable<TData, TValue>({
   loading = false,
   emptyMessage = "No results found.",
   className,
+
+  // Destructure optional server-side props
+  pageCount: manualPageCount,
+  pagination: manualPagination,
+  onPaginationChange: onManualPaginationChange,
+  totalRows,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -88,10 +103,37 @@ export default function DataTable<TData, TValue>({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [globalFilter, setGlobalFilter] = React.useState("");
- 
+  
+  // --- START: MODIFIED PAGINATION LOGIC ---
+  
+  // This local state will be used for client-side pagination
+  const [clientSidePagination, setClientSidePagination] = React.useState({
+    pageIndex: 0,
+    pageSize: pageSize, // Use default from props
+  });
+
+  // Determine which pagination mode is active
+  const isManualPagination = manualPagination !== undefined;
+
+  // Conditionally select the correct pagination state and handler
+  const paginationState = isManualPagination ? manualPagination : clientSidePagination;
+  const paginationHandler = isManualPagination ? onManualPaginationChange : setClientSidePagination;
+  
+  // --- END: MODIFIED PAGINATION LOGIC ---
+
   const table = useReactTable({
     data,
     columns,
+    // Provide pageCount if server-side, otherwise react-table calculates it
+    pageCount: manualPageCount ?? -1,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+      globalFilter,
+      pagination: paginationState, // Always use a defined pagination state
+    },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -102,20 +144,10 @@ export default function DataTable<TData, TValue>({
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: "includesString",
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-      globalFilter,
-    },
-    initialState: {
-      pagination: {
-        pageSize,
-      },
-    },
+    manualPagination: isManualPagination,
+    onPaginationChange: paginationHandler, // Always use a defined handler
   });
- 
+  
   const exportToCSV = () => {
     const headers = table.getVisibleFlatColumns().map((column) => column.id);
     const rows = table.getFilteredRowModel().rows.map((row) =>
@@ -157,33 +189,26 @@ export default function DataTable<TData, TValue>({
   const exportToPDF = () => {
     const doc = new jsPDF();
  
-    // Add title with better styling
     if (title) {
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.setTextColor(37, 99, 235); // Blue color
+      doc.setTextColor(37, 99, 235);
       doc.text(title, 14, 18);
  
-      // Add a subtle line under the title
       doc.setDrawColor(37, 99, 235);
       doc.setLineWidth(0.5);
       doc.line(14, 22, doc.internal.pageSize.width - 14, 22);
     }
  
-    // Helper function to format column names
     const formatColumnName = (name: string): string => {
       return (
         name
-          // Replace underscores with spaces
           .replace(/_/g, " ")
-          // Insert space before capital letters (camelCase)
           .replace(/([a-z])([A-Z])/g, "$1 $2")
-          // Capitalize first letter of each word
           .replace(/\b\w/g, (char) => char.toUpperCase())
       );
     };
  
-    // Prepare table data - exclude "actions" column
     const allColumns = table.getVisibleFlatColumns();
     const filteredColumns = allColumns.filter(
       (column) => column.id.toLowerCase() !== "actions"
@@ -194,7 +219,6 @@ export default function DataTable<TData, TValue>({
  
     const rows = table.getFilteredRowModel().rows.map((row) =>
       filteredColumns.map((column) => {
-        // Try to get the formatted cell value first
         const columnDef = columns.find((col) => {
           const anyCol = col as unknown as Record<string, unknown>;
           if ("accessorKey" in anyCol) {
@@ -206,7 +230,6 @@ export default function DataTable<TData, TValue>({
           return false;
         });
  
-        // If column has a custom cell renderer, use it
         if (
           columnDef &&
           "cell" in columnDef &&
@@ -215,13 +238,11 @@ export default function DataTable<TData, TValue>({
           try {
             const cellContext = { row, column: { id: column.id } } as never;
             const cellValue = columnDef.cell(cellContext);
-            // Extract text content from React elements
             if (
               cellValue &&
               typeof cellValue === "object" &&
               "props" in cellValue
             ) {
-              // Handle React elements
               const reactElement = cellValue as {
                 props?: { children?: unknown };
               };
@@ -231,7 +252,6 @@ export default function DataTable<TData, TValue>({
                   typeof children === "string" ||
                   typeof children === "number"
                 ) {
-                  // Replace Unicode Taka sign with PDF-friendly text
                   return String(children).replace(/৳/g, "TK ");
                 }
                 if (Array.isArray(children)) {
@@ -248,15 +268,12 @@ export default function DataTable<TData, TValue>({
               typeof cellValue === "string" ||
               typeof cellValue === "number"
             ) {
-              // Replace Unicode Taka sign with PDF-friendly text
               return String(cellValue).replace(/৳/g, "TK ");
             }
           } catch {
-            // If custom renderer fails, fall back to raw value
           }
         }
  
-        // Fall back to raw value
         const cell = row.getValue(column.id);
         return typeof cell === "string" || typeof cell === "number"
           ? String(cell)
@@ -264,7 +281,6 @@ export default function DataTable<TData, TValue>({
       })
     );
  
-    // Add table with improved color contrast and smaller font
     autoTable(doc, {
       head: [headers],
       body: rows,
@@ -281,26 +297,25 @@ export default function DataTable<TData, TValue>({
         cellWidth: "auto",
       },
       headStyles: {
-        fillColor: [37, 99, 235], // Blue header background
-        textColor: [255, 255, 255], // White text
+        fillColor: [37, 99, 235],
+        textColor: [255, 255, 255],
         fontStyle: "bold",
         fontSize: 7.5,
         cellPadding: 3,
         halign: "left",
       },
       bodyStyles: {
-        textColor: [30, 30, 30], // Dark text for readability
+        textColor: [30, 30, 30],
         fontSize: 7,
         cellPadding: 2.5,
       },
       alternateRowStyles: {
-        fillColor: [245, 247, 250], // Very light gray for alternate rows
+        fillColor: [245, 247, 250],
       },
       columnStyles: {},
       margin: { top: 15, left: 10, right: 10 },
       tableWidth: "auto",
       didDrawPage: (data) => {
-        // Add page numbers
         const pageCount = doc.getNumberOfPages();
         doc.setFontSize(8);
         doc.setTextColor(100, 100, 100);
@@ -314,9 +329,124 @@ export default function DataTable<TData, TValue>({
  
     doc.save(`${title || "data"}.pdf`);
   };
- 
-  // Much more subtle and professional styling using theme colors
-  // All styling is now handled by Tailwind classes that respect dark mode
+
+  const ClientSidePagination = () => (
+    <div className="flex items-center justify-between px-4 py-3 border-t">
+      <div className="flex items-center space-x-2">
+        <p className="text-sm text-muted-foreground">
+          Showing{" "}
+          {table.getState().pagination.pageIndex *
+            table.getState().pagination.pageSize +
+            1}{" "}
+          to{" "}
+          {Math.min(
+            (table.getState().pagination.pageIndex + 1) *
+              table.getState().pagination.pageSize,
+            table.getFilteredRowModel().rows.length
+          )}{" "}
+          of {table.getFilteredRowModel().rows.length} entries
+        </p>
+      </div>
+      <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
+          <p className="text-sm font-medium">Rows per page</p>
+          <Select
+            value={`${table.getState().pagination.pageSize}`}
+            onValueChange={(value) => {
+              table.setPageSize(Number(value));
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue
+                placeholder={table.getState().pagination.pageSize}
+              />
+            </SelectTrigger>
+            <SelectContent side="top">
+              {pageSizeOptions.map((size) => (
+                <SelectItem key={size} value={`${size}`}>
+                  {size}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center flex-wrap space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ServerSidePagination = () => (
+    <div className="flex items-center justify-between px-4 py-3 border-t">
+      <div className="flex-1 text-sm text-muted-foreground">
+        Showing{" "}
+        <strong>
+          {manualPagination.pageIndex * manualPagination.pageSize + 1}-
+          {Math.min((manualPagination.pageIndex + 1) * manualPagination.pageSize, totalRows)}
+        </strong>{" "}
+        of <strong>{totalRows}</strong> posts.
+      </div>
+      <div className="flex items-center space-x-6 lg:space-x-8">
+        <div className="flex items-center space-x-2">
+          <p className="text-sm font-medium">Rows per page</p>
+          <Select
+            value={`${manualPagination.pageSize}`}
+            onValueChange={(value) => {
+              onManualPaginationChange({ pageIndex: 0, pageSize: Number(value) });
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue placeholder={manualPagination.pageSize} />
+            </SelectTrigger>
+            <SelectContent side="top">
+              {[10, 20, 30, 40, 50].map((size) => (
+                <SelectItem key={size} value={`${size}`}>
+                  {size}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+          Page {manualPagination.pageIndex + 1} of {manualPageCount}
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onManualPaginationChange({ ...manualPagination, pageIndex: manualPagination.pageIndex - 1 })}
+            disabled={manualPagination.pageIndex === 0}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onManualPaginationChange({ ...manualPagination, pageIndex: manualPagination.pageIndex + 1 })}
+            disabled={manualPagination.pageIndex >= manualPageCount - 1}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
  
   if (loading) {
     return (
@@ -345,7 +475,6 @@ export default function DataTable<TData, TValue>({
         </CardHeader>
       )}
       <CardContent className="p-0">
-        {/* Toolbar */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center space-x-2">
             {search && (
@@ -419,7 +548,6 @@ export default function DataTable<TData, TValue>({
           </div>
         </div>
  
-        {/* Table */}
         <div className="border">
           <div className="overflow-x-auto">
             <Table className="border-collapse min-w-max">
@@ -481,68 +609,9 @@ export default function DataTable<TData, TValue>({
           </div>
         </div>
  
-        {/* Pagination */}
-        {enablePagination && (
-          <div className="flex items-center justify-between px-4 py-3 border-t">
-            <div className="flex items-center space-x-2">
-              <p className="text-sm text-muted-foreground">
-                Showing{" "}
-                {table.getState().pagination.pageIndex *
-                  table.getState().pagination.pageSize +
-                  1}{" "}
-                to{" "}
-                {Math.min(
-                  (table.getState().pagination.pageIndex + 1) *
-                    table.getState().pagination.pageSize,
-                  table.getFilteredRowModel().rows.length
-                )}{" "}
-                of {table.getFilteredRowModel().rows.length} entries
-              </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="flex items-center space-x-2">
-                <p className="text-sm font-medium">Rows per page</p>
-                <Select
-                  value={`${table.getState().pagination.pageSize}`}
-                  onValueChange={(value) => {
-                    table.setPageSize(Number(value));
-                  }}
-                >
-                  <SelectTrigger className="h-8 w-[70px]">
-                    <SelectValue
-                      placeholder={table.getState().pagination.pageSize}
-                    />
-                  </SelectTrigger>
-                  <SelectContent side="top">
-                    {pageSizeOptions.map((pageSize) => (
-                      <SelectItem key={pageSize} value={`${pageSize}`}>
-                        {pageSize}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-center flex-wrap space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  Previous
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                >
-                  Next
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* --- Conditionally Render Pagination --- */}
+        {enablePagination && (isManualPagination ? <ServerSidePagination /> : <ClientSidePagination />)}
+
       </CardContent>
     </Card>
   );

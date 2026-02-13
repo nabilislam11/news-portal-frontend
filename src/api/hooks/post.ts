@@ -52,34 +52,39 @@ interface FetchPostsParams {
   limit?: number;
 }
 
-export const useFetchAllPosts = (params?: FetchPostsParams) => {
-  // ১. ডিফল্ট ভ্যালু সেট করা (যদি ইউজার কিছু না পাঠায়)
+export const useFetchAllPosts = () => {
+  return useQuery({
+    queryKey: ["posts", "all"],
+    queryFn: async () => {
+      const res = await api.get("post");
+      // Returns the array of posts directly
+      return res.data.data;
+    },
+    placeholderData: keepPreviousData,
+  });
+};
+
+// New hook for the paginated dashboard table
+export const useFetchAllPostsPaginated = (params: FetchPostsParams) => {
   const page = params?.page || 1;
   const limit = params?.limit || 10;
 
   return useQuery({
-    // ২. Query Key-তে page এবং limit যোগ করা।
-    // এর ফলে যখনই page বা limit চেঞ্জ হবে, React Query নতুন ডেটা আনবে।
-    queryKey: ["posts", "all", page, limit],
-
+    queryKey: ["posts", "all", "paginated", page, limit],
     queryFn: async () => {
-      // ৩. Axios এর params অপশন ব্যবহার করে কুয়েরি স্ট্রিং পাঠানো
       const res = await api.get("post", {
         params: {
           page: page,
           limit: limit,
         },
       });
-
-      // ব্যাকএন্ড রেসপন্স { success, data, pagination } রিটার্ন করছে।
-      // আমরা পুরো data টাই রিটার্ন করছি যাতে আপনি UI তে pagination ইনফো ব্যবহার করতে পারেন।
-      return res.data.data;
+      // Returns the full { posts, pagination } object
+      return res.data;
     },
-
-    // ৪. (Optional) পেজ চেঞ্জ করার সময় আগের ডেটা ধরে রাখা (UX ভালো করার জন্য)
-    placeholderData: (previousData) => previousData,
+    placeholderData: keepPreviousData,
   });
 };
+
 export const useFetchPostById = (id: string) => {
   return useQuery({
     queryKey: ["posts", id],
