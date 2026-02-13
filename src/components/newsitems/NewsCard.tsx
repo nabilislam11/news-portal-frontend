@@ -3,20 +3,18 @@ import { PostContent } from "../post/PostContent";
 import DateFormatter from "../DateFormatter";
 import type { CardProps } from "@/types/CardProps";
 
-
-
-function NewsCard({
-  image,
-  title,
-  content,
-  createdAt,
-  views
-}: CardProps) {
+function NewsCard({ image, title, content, createdAt, views }: CardProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group border border-gray-100">
       <div className="flex flex-col sm:flex-row gap-0 sm:gap-4">
-        {/* Image Section */}
-        <div className="w-full  lg:w-50 lg:h-full aspect-video sm:aspect-square overflow-hidden bg-gray-100">
+        {/* Image Section - FIXED HERE */}
+        {/* - w-full: মোবাইলে ফুল উইডথ
+           - sm:w-48: ছোট ট্যাবলেটে ফিক্সড সাইজ
+           - md:w-56: 884px বা মিডিয়াম স্ক্রিনে একটু বড় ফিক্সড সাইজ
+           - lg:w-64: বড় স্ক্রিনে আরও বড় সাইজ
+           - shrink-0: যাতে ইমেজ চ্যাপ্টা না হয়ে যায়
+        */}
+        <div className="w-full sm:w-48 md:w-56 lg:w-64 shrink-0 aspect-video sm:aspect-square overflow-hidden bg-gray-100">
           <img
             src={image?.url || ""}
             alt={title}
@@ -35,7 +33,9 @@ function NewsCard({
           <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
             <div className="flex items-center gap-1.5">
               <Clock className="w-4 h-4" />
-              <span><DateFormatter date={createdAt} /></span>
+              <span>
+                <DateFormatter date={createdAt} />
+              </span>
             </div>
             <div className="flex items-center gap-1.5">
               <User className="w-4 h-4" />
@@ -44,12 +44,13 @@ function NewsCard({
           </div>
 
           {/* Description */}
-          <p className="text-sm sm:text-base text-gray-700 leading-relaxed line-clamp-3">
-            <PostContent  content={content} />
-          </p>
+          <div className="text-sm sm:text-base text-gray-700 leading-relaxed line-clamp-3">
+            <PostContent content={content} />
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
 export default NewsCard;

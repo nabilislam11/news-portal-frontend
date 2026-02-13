@@ -4,16 +4,16 @@ import Container from "../container/Container";
 import { Button } from "../ui/button";
 import NewsCard from "./NewsCard";
 import { useFetchAllCategories } from "@/api/hooks/category";
-import { useFetchAllTags } from "@/api/hooks/tag";
+// import { useFetchAllTags } from "@/api/hooks/tag";
 import { useFetchAllPosts } from "@/api/hooks/post";
 import type { CardProps } from "@/types/CardProps";
 
 const NewsItems = () => {
   const { data: categories } = useFetchAllCategories();
-  const { data: tags } = useFetchAllTags();
+  // const { data: tags } = useFetchAllTags();
   const { data: posts } = useFetchAllPosts();
 
-  console.log(tags, "tags");
+  // console.log(tags, "tags");
 
   return (
     <div>

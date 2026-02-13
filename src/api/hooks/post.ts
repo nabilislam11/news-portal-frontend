@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import { api } from "../axios";
 
 // --- Types & Interfaces ---
@@ -42,16 +47,39 @@ export interface CategoryPostResponse {
 
 // --- Post Hooks ---
 
-export const useFetchAllPosts = () => {
+interface FetchPostsParams {
+  page?: number;
+  limit?: number;
+}
+
+export const useFetchAllPosts = (params?: FetchPostsParams) => {
+  // ১. ডিফল্ট ভ্যালু সেট করা (যদি ইউজার কিছু না পাঠায়)
+  const page = params?.page || 1;
+  const limit = params?.limit || 10;
+
   return useQuery({
-    queryKey: ["posts", "all"],
+    // ২. Query Key-তে page এবং limit যোগ করা।
+    // এর ফলে যখনই page বা limit চেঞ্জ হবে, React Query নতুন ডেটা আনবে।
+    queryKey: ["posts", "all", page, limit],
+
     queryFn: async () => {
-      const res = await api.get("post");
+      // ৩. Axios এর params অপশন ব্যবহার করে কুয়েরি স্ট্রিং পাঠানো
+      const res = await api.get("post", {
+        params: {
+          page: page,
+          limit: limit,
+        },
+      });
+
+      // ব্যাকএন্ড রেসপন্স { success, data, pagination } রিটার্ন করছে।
+      // আমরা পুরো data টাই রিটার্ন করছি যাতে আপনি UI তে pagination ইনফো ব্যবহার করতে পারেন।
       return res.data.data;
     },
+
+    // ৪. (Optional) পেজ চেঞ্জ করার সময় আগের ডেটা ধরে রাখা (UX ভালো করার জন্য)
+    placeholderData: (previousData) => previousData,
   });
 };
-
 export const useFetchPostById = (id: string) => {
   return useQuery({
     queryKey: ["posts", id],
@@ -82,7 +110,13 @@ export const useCreatePost = () => {
 export const useUpdatePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ _id, formData }: { _id: string; formData: FormData }) => {
+    mutationFn: async ({
+      _id,
+      formData,
+    }: {
+      _id: string;
+      formData: FormData;
+    }) => {
       const res = await api.put(`post/${_id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -142,7 +176,11 @@ export const useSearchPosts = (params: SearchParams) => {
  * UPDATED: Category/Filter Hook with Pagination
  * Note: Added placeholderData: keepPreviousData for smooth UI transitions
  */
-export const useFetchPostsByCategory = (slugOrId: string, page: number = 1, limit: number = 6) => {
+export const useFetchPostsByCategory = (
+  slugOrId: string,
+  page: number = 1,
+  limit: number = 6,
+) => {
   return useQuery({
     queryKey: ["posts", "category", slugOrId, page, limit],
     queryFn: async (): Promise<CategoryPostResponse> => {
