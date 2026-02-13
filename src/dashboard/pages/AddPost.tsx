@@ -21,9 +21,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import JoditEditor from "jodit-react";
 import { useNavigate } from "react-router";
+import { Loader2 } from "lucide-react"; // ১. Loader আইকন ইম্পোর্ট করুন
 
 export default function AddPost() {
-  const navigate = useNavigate(); // ২. নেভিগেট ফাংশন ডিক্লেয়ার
+  const navigate = useNavigate();
   const { data: category } = useFetchAllCategories();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -173,29 +174,6 @@ export default function AddPost() {
           )}
         </div>
 
-        {/* Tags */}
-        {/* <div className="grid gap-3">
-          <Label htmlFor="tags">Tags (Comma separated)</Label>
-          <Input
-            id="tags"
-            placeholder="news, politics, tech"
-            // Reset এর সুবিধার্থে value কানেক্ট করা হয়েছে
-            value={form.watch("tags")?.join(", ") || ""}
-            onChange={(e) => {
-              const tagsArray = e.target.value
-                .split(",")
-                .map((tag) => tag.trim())
-                .filter(Boolean);
-              form.setValue("tags", tagsArray, { shouldValidate: true });
-            }}
-          />
-          {form.formState.errors.tags && (
-            <span className="text-red-500 text-xs">
-              {form.formState.errors.tags.message as string}
-            </span>
-          )}
-        </div> */}
-
         {/* Content */}
         <div className="grid gap-3">
           <Label>Content</Label>
@@ -222,9 +200,23 @@ export default function AddPost() {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
-          <Button type="submit" className="bg-green-500">
-            Post
+          {/* ২. বাটন আপডেট করা হয়েছে */}
+          <Button
+            type="submit"
+            className="bg-green-500"
+            disabled={postMutation.isPending} // লোডিং অবস্থায় ডিজেবল থাকবে
+          >
+            {postMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                {/* স্পিনার */}
+                Posting...
+              </>
+            ) : (
+              "Post"
+            )}
           </Button>
+
           <Button
             type="button"
             variant="outline"
